@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>GrafiSearch</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url({{ .background }}) center center / cover no-repeat fixed;
+        }
+        .layout{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+        .results {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem
+        }
+        .result {
+            border: solid 1px #CCC;
+            position: relative;
+            background: #FFF;
+        }
+        .result__link {
+            position: absolute;
+            inset: 0;
+            display: block;
+        }
+    </style>
+    <script src="/static/app.js" defer type="module"></script>
+</head>
+<body>
+    <h1>GrafiSearch</h1>
+    <form action="">
+        <input name="q" type="search">
+        <button>Rechercher</button>
+    </form>
+    <div class="layout">
+        <div id="google" class="results"></div>
+        <div id="ddg"></div>
+    </div>
+</body>
+</html>
