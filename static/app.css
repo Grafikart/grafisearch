@@ -20,7 +20,6 @@ body {
     font-size: 14px/normal 'Roboto', Helvetica, Sans-Serif;
     line-height: 1.4;
     background: var(--background) center center / cover no-repeat fixed;
-    background-image: url(https://www.bing.com/th?id=OHR.WhangareiFalls_FR-FR4972453320_1920x1080.jpg&rf=LaDigue_1920x1080.jpg);
 }
 a{
     text-decoration: none;
@@ -52,6 +51,7 @@ header {
     justify-content: center;
 }
 .logo {
+    flex: none;
     display: none;
     color: var(--colorLight);
     width: 60px;
@@ -86,17 +86,25 @@ header {
 .has-results {
     background-image: none!important;
 }
+
+/**
+* Layout
+**/
 .layout{
     margin-left: 60px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
+    transition: .3s;
 }
 .layout hr {
     border: none;
     background: var(--backgroundLight);
     width: 100%;
     height: 100%;
+}
+.is-loading .layout {
+    opacity: .5;
 }
 
 /**
@@ -105,7 +113,8 @@ header {
 .results {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2rem
+    gap: 2rem;
+    align-content: flex-start;
 }
 .result {
     position: relative;
@@ -154,6 +163,16 @@ header {
     margin-right: 0.5em;
     width: 16px;
     height: 16px;
+}
+.result__desc {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.result__desc em {
+    font-weight: bold;
+    font-style: normal;
 }
 .result__related {
     position: relative;
@@ -222,8 +241,16 @@ header {
         padding-left: 150px;
     }
     .layout {
-        margin-left: 150px;
         grid-template-columns: 1fr 3px 1fr;
+    }
+}
+
+@media only screen and (min-width: 1500px) {
+    header {
+        padding-left: 150px;
+    }
+    .layout {
+        margin-left: 150px;
     }
 }
 

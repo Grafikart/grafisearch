@@ -1,3 +1,5 @@
+import {handleBang} from './bangs.js'
+
 const form = document.querySelector('form')
 const url = new URL(window.location.href)
 const searchInput = document.querySelector('.search-input')
@@ -5,9 +7,11 @@ const searchInput = document.querySelector('.search-input')
 form.addEventListener('submit', (e) => {
     e.preventDefault();
     const q = new FormData(e.target).get('q')
-    search(q)
-    url.searchParams.set('q', q)
-    history.pushState(null, '', url.toString())
+    if (search(q)) {
+        url.searchParams.set('q', q)
+        history.pushState(null, '', url.toString())
+        searchInput.value = q
+    }
 })
 
 searchInput.addEventListener('focus', () => {
@@ -22,12 +26,19 @@ searchInput.addEventListener('blur', () => {
  * Search the result
  * 
  * @param {string} q
+ * @return {boolean}
  */
 function search(q) {
-    searchInput.value = q
+    if (handleBang(q)) {
+        return false;
+    }
     document.body.classList.add('has-results')
-    fetch(`http://localhost:8080/google?q=${q}`).then(r => r.json()).then(injectResult('#google'))    
-    fetch(`http://localhost:8080/google?q=${q}`).then(r => r.json()).then(injectResult('#ddg'))    
+    document.body.classList.add('is-loading')
+    Promise.any([
+        fetch(`/google?q=${q}`).then(r => r.json()).then(injectResult('#google'))   , 
+        fetch(`/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg'))    
+    ]).then(() => document.body.classList.remove('is-loading'))
+    return true
 }
 
 const injectResult = (selector) => (results) => {
@@ -45,7 +56,7 @@ const injectResult = (selector) => (results) => {
                 <img src="${favicon}" alt="">
                 <span>${link}</span>
             </a>
-            <p>${r.desc}</p>
+            <p class="result__desc">${r.desc}</p>
             ${buildRelated(r)}
             <a class="result__link" href="${r.url}"></a>
         </div>`
@@ -67,5 +78,6 @@ function buildRelated(result) {
 
 const q = url.searchParams.get('q')
 if (q) {
+    searchInput.value = q
     search(q)
 }

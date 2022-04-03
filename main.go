@@ -33,6 +33,7 @@ func main() {
 
 	// API
 	http.HandleFunc("/google", serveGoogle)
+	http.HandleFunc("/ddg", serveDDG)
 
 	// Static files
 	fs := http.FileServer(http.Dir("./static"))
@@ -40,22 +41,49 @@ func main() {
 	http.HandleFunc("/", serveHome)
 
 	// Start the server
-	fmt.Println("Server started at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Println("Server started at port 8042")
+	log.Fatal(http.ListenAndServe(":8042", nil))
 }
 
 func serveGoogle(res http.ResponseWriter, req *http.Request) {
 	setupCORS(&res)
 	q := req.URL.Query().Get("q")
-	results, err := ParseGoogleResponse(q)
+	results, err := parseGoogleResponse(parseBangs(q))
 	if err != nil {
-		log.Fatal(err)
+		serveError(res, err)
+		return
 	}
 	data, err := json.Marshal(results)
 	if err != nil {
+		serveError(res, err)
 		return
 	}
 	res.Write(data)
+}
+
+func serveDDG(res http.ResponseWriter, req *http.Request) {
+	setupCORS(&res)
+	q := req.URL.Query().Get("q")
+	results, err := ParseDDGResponse(parseBangs(q))
+	if err != nil {
+		serveError(res, err)
+		return
+	}
+	data, err := json.Marshal(results)
+	if err != nil {
+		serveError(res, err)
+		return
+	}
+	res.Write(data)
+}
+
+func serveError(res http.ResponseWriter, err error) {
+	res.WriteHeader(http.StatusInternalServerError)
+	data := map[string]string{
+		"message": err.Error(),
+	}
+	body, _ := json.Marshal(data)
+	res.Write(body)
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
