@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>GrafiSearch</title>
+    <link rel="stylesheet" href="/static/app.css"></link>
+    <style>
+        body {
+            background-image: url({{ .background }});
+        }
+    </style>
+    <script src="/static/app.js" defer type="module"></script>
+</head>
+<body class="has-focus">
+    <header>
+            <a href="/" class="logo">
+                <svg>
+                    <use xlink:href="/static/logo.svg#logo"></use>
+                </svg>
+            </a>
+            <form action="" class="search-form" id="s">
+                <input autofocus class="search-input" name="q" type="text" autocomplete="off">
+                <button class="search-button">
+                    <svg width="30" height="24" viewBox="0 0 25 25"><path stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-miterlimit="10" fill="none" d="M23.75 23.75l-9-9"></path><circle stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-miterlimit="10" cx="9" cy="9" r="7.75" fill="none"></circle><path fill="none" d="M25 25h-25v-25h25z"></path></svg>
+                </button>
+            </form>
+    </header>
+    <div class="layout">
+        <div id="google" class="results"></div>
+        <hr>
+        <div id="ddg" class="results"></div>
+    </div>
+</body>
+</html>

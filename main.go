@@ -10,12 +10,18 @@ import (
 
 var wallpaper string
 
+type Link struct {
+	Title string `json:"title"`
+	URL   string `json:"url"`
+}
+
 type SearchResult struct {
-	Rank   int    `json:"id"`
-	URL    string `json:"url"`
-	Title  string `json:"title"`
-	Desc   string `json:"desc"`
-	Domain string `json:"domain"`
+	Rank    int    `json:"id"`
+	URL     string `json:"url"`
+	Title   string `json:"title"`
+	Desc    string `json:"desc"`
+	Domain  string `json:"domain"`
+	Related []Link `json:"related"`
 }
 
 func main() {
@@ -39,6 +45,7 @@ func main() {
 }
 
 func serveGoogle(res http.ResponseWriter, req *http.Request) {
+	setupCORS(&res)
 	q := req.URL.Query().Get("q")
 	results, err := ParseGoogleResponse(q)
 	if err != nil {
@@ -52,7 +59,7 @@ func serveGoogle(res http.ResponseWriter, req *http.Request) {
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("index.gohtml")
+	t, err := template.ParseFiles("index.html")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -61,4 +68,10 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	err = t.Execute(w, map[string]string{
 		"background": wallpaper,
 	})
+}
+
+func setupCORS(res *http.ResponseWriter) {
+	(*res).Header().Set("Access-Control-Allow-Origin", "*")
+	(*res).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*res).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }

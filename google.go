@@ -20,11 +20,12 @@ func ParseGoogleResponse(q string) ([]SearchResult, error) {
 
 	results := []SearchResult{}
 	sel := doc.Find("div.g")
+	urls := make(map[string]int)
 	for i := range sel.Nodes {
 		item := sel.Eq(i)
 		linkTag := item.Find("a")
 		link, _ := linkTag.Attr("href")
-		titleTag := item.Find("h3")
+		titleTag := item.Find("h3").First()
 		descTag := item.Find(".VwiC3b")
 		desc := descTag.Text()
 		title := titleTag.Text()
@@ -32,19 +33,39 @@ func ParseGoogleResponse(q string) ([]SearchResult, error) {
 
 		if link != "" && link != "#" && !strings.HasPrefix(link, "/") {
 			url, err := url.Parse(link)
-			if err == nil && !IsBlockedSite(url.Host) {
+			_, linkAlreadyListed := urls[link]
+			if err == nil && !IsBlockedSite(url.Host) && !linkAlreadyListed {
+				urls[link] = 1
 				result := SearchResult{
 					i,
 					link,
 					title,
 					desc,
 					url.Host,
+					extractRelated(item.Find(".fl")),
 				}
 				results = append(results, result)
 			}
 		}
 	}
 	return results, err
+}
+
+func extractRelated(s *goquery.Selection) []Link {
+	var selection []Link
+	for i := range s.Nodes {
+		item := s.Eq(i)
+		span := item.Find("span")
+		title := span.Text()
+		url := item.AttrOr("href", "")
+		if !strings.Contains(url, "webcache.googleusercontent") &&
+			!strings.Contains(url, "translate.google.com") &&
+			!strings.HasPrefix(url, "/search?q") {
+			selection = append(selection, Link{title, url})
+
+		}
+	}
+	return selection
 }
 
 func fetchGoogle(q string) *http.Response {
