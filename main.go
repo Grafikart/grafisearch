@@ -39,8 +39,8 @@ func main() {
 	wallpaper = bingWallpaper
 
 	// API
-	http.HandleFunc("/google", serveGoogle)
-	http.HandleFunc("/ddg", serveDDG)
+	http.HandleFunc("/google", serveWithParser(parseGoogleResponse))
+	http.HandleFunc("/ddg", serveWithParser(ParseDDGResponse))
 
 	// Static files
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
@@ -51,36 +51,22 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8042", nil))
 }
 
-func serveGoogle(res http.ResponseWriter, req *http.Request) {
-	setupCORS(&res)
-	q := req.URL.Query().Get("q")
-	results, err := parseGoogleResponse(parseBangs(q))
-	if err != nil {
-		serveError(res, err)
-		return
+func serveWithParser(fn func(string) ([]SearchResult, error)) func(http.ResponseWriter, *http.Request) {
+	return func(res http.ResponseWriter, req *http.Request) {
+		setupCORS(&res)
+		q := req.URL.Query().Get("q")
+		results, err := fn(parseBangs(q))
+		if err != nil {
+			serveError(res, err)
+			return
+		}
+		data, err := json.Marshal(results)
+		if err != nil {
+			serveError(res, err)
+			return
+		}
+		res.Write(data)
 	}
-	data, err := json.Marshal(results)
-	if err != nil {
-		serveError(res, err)
-		return
-	}
-	res.Write(data)
-}
-
-func serveDDG(res http.ResponseWriter, req *http.Request) {
-	setupCORS(&res)
-	q := req.URL.Query().Get("q")
-	results, err := ParseDDGResponse(parseBangs(q))
-	if err != nil {
-		serveError(res, err)
-		return
-	}
-	data, err := json.Marshal(results)
-	if err != nil {
-		serveError(res, err)
-		return
-	}
-	res.Write(data)
 }
 
 func serveError(res http.ResponseWriter, err error) {
