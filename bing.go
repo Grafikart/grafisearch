@@ -14,7 +14,7 @@ const (
 	bingAPI = `https://www.bing.com/HPImageArchive.aspx?format=xml&idx=%d&n=1&mkt=%s`
 )
 
-func BingWallpaper() (string, error) {
+func bingWallpaper() (string, error) {
 
 	client := &http.Client{
 		Timeout: 5 * time.Second,

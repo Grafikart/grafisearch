@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -24,8 +25,14 @@ type SearchResult struct {
 	Related []Link `json:"related"`
 }
 
+//go:embed index.html
+var index string
+
+//go:embed static/*
+var staticContent embed.FS
+
 func main() {
-	bingWallpaper, err := BingWallpaper()
+	bingWallpaper, err := bingWallpaper()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,8 +43,7 @@ func main() {
 	http.HandleFunc("/ddg", serveDDG)
 
 	// Static files
-	fs := http.FileServer(http.Dir("./static"))
-	http.Handle("/static/", http.StripPrefix("/static/", fs))
+	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
 	http.HandleFunc("/", serveHome)
 
 	// Start the server
@@ -87,13 +93,12 @@ func serveError(res http.ResponseWriter, err error) {
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
-	t, err := template.ParseFiles("index.html")
+	t, err := template.New("index.html").Parse(index)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// http.ServeFile(w, r, "static/index.html")
-	err = t.Execute(w, map[string]string{
+	t.Execute(w, map[string]string{
 		"background": wallpaper,
 	})
 }
