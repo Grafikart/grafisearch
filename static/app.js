@@ -23,15 +23,15 @@ const injectResult = (selector) => (results) => {
     const container = document.querySelector(selector)
     container.innerHTML = results.map(r => {
         const url = new URL(r.url)
-        const favicon = `https://external-content.duckduckgo.com/ip3/${url.host}.ico`
-        const domain = r.url
+        const favicon = `https://external-content.duckduckgo.com/ip3/${r.domain}.ico`
+        const link = r.url
             .replace('https://', '')
             .replace(/\/$/, '')
         return `<div class="result">
             <a class="result__title" href="${r.url}">${r.title}</a>
             <a class="result__url">
                 <img src="${favicon}" alt="">
-                <span>${domain}</span>
+                <span>${link}</span>
             </a>
             <p>${r.desc}</p>
             <a class="result__link" href="${r.url}"></a>

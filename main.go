@@ -11,10 +11,11 @@ import (
 var wallpaper string
 
 type SearchResult struct {
-	Rank  int    `json:"id"`
-	URL   string `json:"url"`
-	Title string `json:"title"`
-	Desc  string `json:"desc"`
+	Rank   int    `json:"id"`
+	URL    string `json:"url"`
+	Title  string `json:"title"`
+	Desc   string `json:"desc"`
+	Domain string `json:"domain"`
 }
 
 func main() {

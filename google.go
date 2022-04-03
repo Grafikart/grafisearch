@@ -31,13 +31,17 @@ func ParseGoogleResponse(q string) ([]SearchResult, error) {
 		link = strings.Trim(link, " ")
 
 		if link != "" && link != "#" && !strings.HasPrefix(link, "/") {
-			result := SearchResult{
-				i,
-				link,
-				title,
-				desc,
+			url, err := url.Parse(link)
+			if err == nil && !IsBlockedSite(url.Host) {
+				result := SearchResult{
+					i,
+					link,
+					title,
+					desc,
+					url.Host,
+				}
+				results = append(results, result)
 			}
-			results = append(results, result)
 		}
 	}
 	return results, err
