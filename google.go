@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"net/url"
 	"strings"
 
@@ -22,6 +23,8 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 	results := []SearchResult{}
 	sel := doc.Find("div.g")
 	urls := make(map[string]int)
+
+	// Find natural results
 	for i := range sel.Nodes {
 		item := sel.Eq(i)
 		linkTag := item.Find("a")
@@ -38,7 +41,6 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			if err == nil && !isBlockedSite(url.Host) && !linkAlreadyListed {
 				urls[link] = 1
 				result := SearchResult{
-					i,
 					link,
 					title,
 					desc,
@@ -49,6 +51,33 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			}
 		}
 	}
+
+	// Find youtube videos
+	sel = doc.Find(".RzdJxc")
+	var videos []SearchResult
+	if len(sel.Nodes) > 0 {
+		for i := range sel.Nodes {
+			item := sel.Eq(i)
+			anchor := item.Find("a")
+			href := anchor.AttrOr("href", "")
+			title := anchor.AttrOr("aria-label", "")
+			parts := strings.Split(title, ",")
+			videos = append(videos, SearchResult{
+				href,
+				parts[0],
+				strings.ReplaceAll(parts[1], "YouTube ", ""),
+				"youtube.com",
+				nil,
+			})
+		}
+		max := int(math.Min(float64(len(videos)-1), 3))
+		newResults := make([]SearchResult, 0, max+len(results))
+		newResults = append(newResults, results[:2]...)
+		newResults = append(newResults, videos[:max]...)
+		newResults = append(newResults, results[2:]...)
+		results = newResults
+	}
+
 	return results, err
 }
 
@@ -63,7 +92,6 @@ func extractRelated(s *goquery.Selection) []Link {
 			!strings.Contains(url, "translate.google.com") &&
 			!strings.HasPrefix(url, "/search?q") {
 			selection = append(selection, Link{title, url})
-
 		}
 	}
 	return selection

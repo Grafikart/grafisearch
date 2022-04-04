@@ -46,11 +46,15 @@ p {
 }
 
 .layout {
+    display: none;
     margin-left: 60px;
-    display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
     transition: .3s;
+}
+
+.has-results .layout{
+    display: grid;
 }
 
 .layout hr {

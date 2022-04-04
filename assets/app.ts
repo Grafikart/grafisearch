@@ -1,6 +1,7 @@
-import {handleBang} from './bangs.js'
+import { handleBang } from './bangs.js'
 import './css/app.scss'
-import type {SearchResult} from "./types";
+import type { SearchResult } from "./types";
+import { youtubeThumbnail } from './youtube.js';
 
 const form = document.querySelector('form') as HTMLFormElement
 const url = new URL(window.location.href)
@@ -32,8 +33,8 @@ function search(q: string): boolean {
   document.body.classList.add('is-loading')
   // @ts-ignore
   Promise.any([
-    fetch(`/api/google?q=${q}`).then(r => r.json()).then(injectResult('#google'))   ,
-    fetch(`/api/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg'))
+    fetch(`/api/google?q=${q}`).then(r => r.json()).then(injectResult('#google')).catch(console.error),
+    fetch(`/api/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg')).catch(console.error)
   ]).then(() => document.body.classList.remove('is-loading'))
   return true
 }
@@ -43,19 +44,40 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
   container.innerHTML = results.map(r => {
     const favicon = `https://external-content.duckduckgo.com/ip3/${r.domain}.ico`
     const link = r.url
-        .replace('https://', '')
-        .replace('www.', '')
-        .replace(/\/$/, '')
-    return `<div class="result">
-            <a class="result__title" href="${r.url}">${r.title}</a>
-            <a class="result__url">
-                <img src="${favicon}" alt="">
-                <span>${link}</span>
-            </a>
-            <p class="result__desc">${r.desc}</p>
-            ${buildRelated(r)}
+      .replace('https://', '')
+      .replace('www.', '')
+      .replace(/\/$/, '')
+    let img = null
+    if (r.url.startsWith("https://www.youtube.com/watch")) {
+      img = youtubeThumbnail(r.url)
+      const [author, durationInWords, date] = r.desc.split(". ")
+      const duration = durationInWords ? durationInWords
+        .replaceAll(" minutes", "min")
+        .replaceAll(" et ", "")
+        .replaceAll("secondes", "") : ''
+      return `<div class="result result--img">
+            <img class="result__img" src="${img}" alt="">
+            <div>
+              <a class="result__title" href="${r.url}">${r.title}</a>
+              <a class="result__url">
+                  <img src="${favicon}" alt="">
+                  <span>${author}</span>
+              </a>
+              <p class="result__desc">${duration}</p>
+            </div>
             <a class="result__link" href="${r.url}"></a>
         </div>`
+    }
+    return `<div class="result">
+      <a class="result__title" href="${r.url}">${r.title}</a>
+      <a class="result__url">
+          <img src="${favicon}" alt="">
+          <span>${link}</span>
+      </a>
+      <p class="result__desc">${r.desc}</p>
+      ${buildRelated(r)}
+      <a class="result__link" href="${r.url}"></a>
+    </div>`
   }).join('')
 }
 

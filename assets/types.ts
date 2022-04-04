@@ -1,5 +1,5 @@
 export type SearchLink = {
-    label: string,
+    title: string,
     url: string
 }
 

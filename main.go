@@ -17,7 +17,6 @@ type Link struct {
 }
 
 type SearchResult struct {
-	Rank    int    `json:"id"`
 	URL     string `json:"url"`
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`

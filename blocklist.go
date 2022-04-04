@@ -8,6 +8,7 @@ var blocklist = []string{
 	"jeuxvideo.com",
 	"lemonde.fr",
 	"w3schools.com",
+	"pinterest.fr",
 }
 
 func isBlockedSite(s string) bool {

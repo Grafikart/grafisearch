@@ -2,7 +2,7 @@
 dist/
 
 # Assets
-/static/main.js
+/static/app.js
 /static/style.css
 
 # Logs

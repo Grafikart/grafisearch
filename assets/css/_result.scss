@@ -81,3 +81,22 @@
     margin-top: .5em;
     font-size: 0.9em;
 }
+
+// Result with image
+.result--img {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 20px;
+    align-content: flex-start;
+    overflow: hidden;
+
+    .result__title {
+        font-size: 1rem;
+    }
+}
+.result__img {
+    width: 125px;
+    height: 70px;
+    object-fit: cover;;
+    border-radius: 5px;
+}
