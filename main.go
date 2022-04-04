@@ -22,7 +22,7 @@ type SearchResult struct {
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`
 	Domain  string `json:"domain"`
-	Related []Link `json:"related"`
+	Related []Link `json:"related,omitempty"`
 }
 
 //go:embed index.html
@@ -39,8 +39,8 @@ func main() {
 	wallpaper = bingWallpaper
 
 	// API
-	http.HandleFunc("/google", serveWithParser(parseGoogleResponse))
-	http.HandleFunc("/ddg", serveWithParser(ParseDDGResponse))
+	http.HandleFunc("/api/google", serveWithParser(parseGoogleResponse))
+	http.HandleFunc("/api/ddg", serveWithParser(ParseDDGResponse))
 
 	// Static files
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))

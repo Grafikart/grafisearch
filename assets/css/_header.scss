@@ -1,0 +1,105 @@
+header {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    flex: none;
+    display: none;
+    color: var(--colorLight);
+    width: 60px;
+    height: 60px;
+    margin-right: 2rem;
+    transition: color .3s;
+}
+
+.has-results .logo {
+    display: block;
+}
+
+.has-focus .logo,
+.logo:hover {
+    color: var(--color);
+}
+
+.logo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.has-results header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    background-color: var(--backgroundLight);
+    padding-left: 60px;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    margin-bottom: 2rem;
+    justify-content: flex-start;
+}
+
+.search-form {
+    height: 52px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 30%);
+    background: var(--background);
+    align-items: stretch;
+    border-radius: 52px;
+    height: 52px;
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: .3s;
+}
+
+.has-focus .search-form {
+    border: solid 1px var(--color);
+    box-shadow: 0 0 0 4px var(--colorLight);
+}
+
+.search-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    color: var(--color);
+    font-size: 1rem;
+    font: inherit;
+    padding-inline: 1rem;
+    background: transparent;
+}
+
+.search-button {
+    background: transparent;
+    flex: none;
+    padding: 0;
+    margin: 0;
+    padding-right: .5rem;
+    border: none;
+    color: var(--title);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+    transition: color .3s;
+}
+
+.search-button:hover {
+    color: var(--color);
+}
+
+@media only screen and (min-width: 1500px) {
+    .has-results header {
+        padding-left: 150px;
+    }
+}

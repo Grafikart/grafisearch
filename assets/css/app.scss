@@ -1,0 +1,80 @@
+:root {
+    --color: #a9b1d6;
+    --colorLight: #a9b1d63d;
+    --background: #0d0e16;
+    --backgroundLight: #191d2d;
+    --link: #9ece6a;
+    --title: #7aa2f7;
+    --visited: #bb9af7;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--color);
+    font-size: 14px/normal 'Roboto', Helvetica, Sans-Serif;
+    line-height: 1.4;
+    background: var(--background) center center / cover no-repeat fixed;
+}
+
+a {
+    text-decoration: none;
+    color: var(--title);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: var(--visited)
+}
+
+p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+
+.has-results {
+    background-image: none !important;
+}
+
+.layout {
+    margin-left: 60px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    transition: .3s;
+}
+
+.layout hr {
+    border: none;
+    background: var(--backgroundLight);
+    width: 100%;
+    height: 100%;
+}
+
+.is-loading .layout {
+    opacity: .5;
+}
+
+@import 'result.scss';
+@import 'header.scss';
+
+@media only screen and (min-width: 1200px) {
+    .layout {
+        grid-template-columns: 1fr 3px 1fr;
+    }
+}
+
+@media only screen and (min-width: 1500px) {
+    .layout {
+        margin-left: 150px;
+    }
+}

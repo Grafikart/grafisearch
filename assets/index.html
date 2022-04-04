@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="main.ts" type="module" defer></script>
+</head>
+<body class="has-focus">
+<header>
+    <a href="/" class="logo">
+        <svg>
+            <use xlink:href="/static/logo.svg#logo"></use>
+        </svg>
+    </a>
+    <form action="" class="search-form" id="s">
+        <input autofocus class="search-input" name="q" type="text" autocomplete="off">
+        <button class="search-button">
+            <svg width="30" height="24" viewBox="0 0 25 25"><path stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-miterlimit="10" fill="none" d="M23.75 23.75l-9-9"></path><circle stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-miterlimit="10" cx="9" cy="9" r="7.75" fill="none"></circle><path fill="none" d="M25 25h-25v-25h25z"></path></svg>
+        </button>
+    </form>
+</header>
+<div class="layout">
+    <div id="google" class="results"></div>
+    <hr>
+    <div id="ddg" class="results"></div>
+</div>
+</body>
+</html>

@@ -3,9 +3,9 @@ package main
 import "strings"
 
 var bangs = map[string]string{
-	"!r": "site:reddit.com",
-	"!g": "site:grafikart.fr",
-	"!i": "site:stackoverflow.com OR site:github.com",
+	"!r":  "site:reddit.com",
+	"!gr": "site:grafikart.fr",
+	"!i":  "site:stackoverflow.com OR site:github.com",
 }
 
 func parseBangs(q string) string {

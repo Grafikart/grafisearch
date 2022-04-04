@@ -5,15 +5,11 @@ const bangs = {
     "!imdb": "https://www.imdb.com/find?s=all&q=%s",
     "!gh": "https://github.com/search?utf8=%E2%9C%93&q=%s",
     "!yt": "https://www.youtube.com/results?search_query=%s",
-    "!d": "https://www.larousse.fr/dictionnaires/francais/%s"
+    "!d": "https://www.larousse.fr/dictionnaires/francais/%s",
+    "!g": "https://www.google.com/search?q=%s",
 }
 
-
-/**
- * @param {string} q 
- * @return {boolean}
- */
-export function handleBang (q) {
+export function handleBang (q: string): boolean {
     if (!q.includes('!')) {
         return false;
     }
