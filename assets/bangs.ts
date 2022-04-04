@@ -7,6 +7,7 @@ const bangs = {
     "!yt": "https://www.youtube.com/results?search_query=%s",
     "!d": "https://www.larousse.fr/dictionnaires/francais/%s",
     "!g": "https://www.google.com/search?q=%s",
+    "!w": "https://www.yr.no/en/search?q=%s"
 }
 
 export function handleBang (q: string): boolean {

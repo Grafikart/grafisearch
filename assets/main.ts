@@ -30,6 +30,7 @@ function search(q: string): boolean {
   searchInput.value = q
   document.body.classList.add('has-results')
   document.body.classList.add('is-loading')
+  // @ts-ignore
   Promise.any([
     fetch(`/api/google?q=${q}`).then(r => r.json()).then(injectResult('#google'))   ,
     fetch(`/api/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg'))
