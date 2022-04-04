@@ -1,4 +1,4 @@
-# GafiSearch
+# GrafiSearch
 
 A custom web server to serve as a personal search engine.
 
