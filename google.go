@@ -34,6 +34,7 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 		desc, _ := descTag.Html()
 		title := titleTag.Text()
 		link = strings.Trim(link, " ")
+		cite := item.Find("cite")
 
 		if link != "" && link != "#" && !strings.HasPrefix(link, "/") {
 			url, err := url.Parse(link)
@@ -41,11 +42,12 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			if err == nil && !isBlockedSite(url.Host) && !linkAlreadyListed {
 				urls[link] = 1
 				result := SearchResult{
-					link,
-					title,
-					desc,
-					url.Host,
-					extractRelated(item.Find(".fl")),
+					URL:     link,
+					Title:   title,
+					Desc:    desc,
+					Domain:  url.Host,
+					Author:  cite.First().Text(),
+					Related: extractRelated(item.Find(".fl")),
 				}
 				results = append(results, result)
 			}
@@ -60,14 +62,15 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			item := sel.Eq(i)
 			anchor := item.Find("a")
 			href := anchor.AttrOr("href", "")
+			cite := anchor.Find("cite").Parent()
 			title := anchor.AttrOr("aria-label", "")
 			parts := strings.Split(title, ",")
 			videos = append(videos, SearchResult{
-				href,
-				parts[0],
-				strings.ReplaceAll(parts[1], "YouTube ", ""),
-				"youtube.com",
-				nil,
+				URL:    href,
+				Title:  parts[0],
+				Desc:   parts[1],
+				Domain: "youtube.com",
+				Author: cite.First().Text(),
 			})
 		}
 		max := int(math.Min(float64(len(videos)-1), 3))

@@ -9,4 +9,5 @@ export type SearchResult = {
     desc: string,
     domain: string,
     related?: SearchLink[]
+    author?: string
 }

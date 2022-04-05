@@ -21,6 +21,7 @@ type SearchResult struct {
 	Title   string `json:"title"`
 	Desc    string `json:"desc"`
 	Domain  string `json:"domain"`
+	Author  string `json:"author,omitempty"`
 	Related []Link `json:"related,omitempty"`
 }
 
