@@ -74,11 +74,7 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			})
 		}
 		max := int(math.Min(float64(len(videos)-1), 3))
-		newResults := make([]SearchResult, 0, max+len(results))
-		newResults = append(newResults, results[:2]...)
-		newResults = append(newResults, videos[:max]...)
-		newResults = append(newResults, results[2:]...)
-		results = newResults
+		results = insertSlice(results, videos[:max], 2)
 	}
 
 	return results, err
