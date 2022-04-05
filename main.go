@@ -68,16 +68,23 @@ func serveWithParser(fn func(string) ([]SearchResult, error)) func(http.Response
 	}
 }
 
-func serveError(res http.ResponseWriter, err error) {
-	res.WriteHeader(http.StatusInternalServerError)
+func serveError(r http.ResponseWriter, err error) {
+	r.WriteHeader(http.StatusInternalServerError)
 	data := map[string]string{
 		"message": err.Error(),
 	}
 	body, _ := json.Marshal(data)
-	res.Write(body)
+	r.Write(body)
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query().Get("q")
+	redirect := parseRedirectBangs(q)
+	if redirect != "" {
+		w.Header().Set("Location", redirect)
+		w.WriteHeader(http.StatusFound)
+		return
+	}
 	t, err := template.New("index.html").Parse(index)
 	if err != nil {
 		log.Fatal(err)
@@ -88,8 +95,8 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func setupCORS(res *http.ResponseWriter) {
-	(*res).Header().Set("Access-Control-Allow-Origin", "*")
-	(*res).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*res).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+func setupCORS(r *http.ResponseWriter) {
+	(*r).Header().Set("Access-Control-Allow-Origin", "*")
+	(*r).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*r).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
