@@ -31,7 +31,9 @@ func ParseDDGResponse(q string) ([]SearchResult, error) {
 		link := title.AttrOr("href", "")
 		desc, _ := item.Find(".result__snippet").Html()
 		u, err := url.Parse(link)
-		if err == nil && !isBlockedSite(u.Host) {
+		if err == nil &&
+			!isBlockedSite(u.Host) &&
+			!item.HasClass("result--ad") {
 			results = append(results, SearchResult{
 				URL:    link,
 				Title:  title.Text(),
