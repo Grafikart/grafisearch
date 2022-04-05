@@ -35,7 +35,7 @@ header {
     display: flex;
     align-items: center;
     background-color: var(--backgroundLight);
-    padding-left: 60px;
+    padding-left: 57px;
     position: sticky;
     top: 0;
     left: 0;
@@ -96,10 +96,4 @@ header {
 
 .search-button:hover {
     color: var(--color);
-}
-
-@media only screen and (min-width: 1500px) {
-    .has-results header {
-        padding-left: 150px;
-    }
 }

@@ -33,11 +33,10 @@ func ParseDDGResponse(q string) ([]SearchResult, error) {
 		u, err := url.Parse(link)
 		if err == nil && !isBlockedSite(u.Host) {
 			results = append(results, SearchResult{
-				link,
-				title.Text(),
-				desc,
-				u.Host,
-				nil,
+				URL:    link,
+				Title:  title.Text(),
+				Desc:   desc,
+				Domain: u.Host,
 			})
 		}
 	}

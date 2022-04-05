@@ -28,6 +28,7 @@ function search(q: string): boolean {
   if (handleBang(q)) {
     return false;
   }
+  document.title = `${q} - Recherche`
   searchInput.value = q
   document.body.classList.add('has-results')
   document.body.classList.add('is-loading')
@@ -50,16 +51,17 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
     let img = null
     if (r.url.startsWith("https://www.youtube.com/watch")) {
       img = youtubeThumbnail(r.url)
-      const [author, durationInWords, date] = r.desc.split(". ")
+      const [_, durationInWords, date] = r.desc.split(". ")
       const duration = durationInWords ? durationInWords
         .replaceAll(" minutes", "min")
         .replaceAll(" et ", "")
         .replaceAll("secondes", "") : ''
+      const author = r.author ? r.author.replace('YouTube · ', '') : 'YouTube'
       return `<div class="result result--img">
             <img class="result__img" src="${img}" alt="">
             <div>
               <a class="result__title" href="${r.url}">${r.title}</a>
-              <a class="result__url">
+              <a class="result__url" href="${r.url}">
                   <img src="${favicon}" alt="">
                   <span>${author}</span>
               </a>
@@ -70,7 +72,7 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
     }
     return `<div class="result">
       <a class="result__title" href="${r.url}">${r.title}</a>
-      <a class="result__url">
+      <a class="result__url" href="${r.url}">
           <img src="${favicon}" alt="">
           <span>${link}</span>
       </a>
@@ -101,7 +103,7 @@ if (q) {
 
 // Handle history
 window.onpopstate = function (e) {
-  const q = new URL(e.target.location.href).searchParams.get('q')
+  const q = new URL(window.location.href).searchParams.get('q')
   if (!q) {
     document.body.classList.remove('has-results')
     document.querySelector('#google')!.innerHTML = ''
