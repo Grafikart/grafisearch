@@ -13,10 +13,10 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'assets/main.ts'),
+      entry: resolve(__dirname, 'assets/app.ts'),
       formats: ['es'],
-      name: 'main',
-      fileName: 'main'
+      name: 'app',
+      fileName: 'app'
     },
     rollupOptions: {
       output: { entryFileNames: "[name].js" },
