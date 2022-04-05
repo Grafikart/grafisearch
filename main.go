@@ -7,9 +7,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 )
-
-var wallpaper string
 
 type Link struct {
 	Title string `json:"title"`
@@ -30,13 +29,17 @@ var index string
 
 //go:embed static/*
 var staticContent embed.FS
+var homePage string
 
 func main() {
 	bingWallpaper, err := bingWallpaper()
 	if err != nil {
 		log.Fatal(err)
 	}
-	wallpaper = bingWallpaper
+	homePage, err = parseHomepage(bingWallpaper)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// API
 	http.HandleFunc("/api/google", serveWithParser(parseGoogleResponse))
@@ -86,14 +89,26 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusFound)
 		return
 	}
+	w.Write([]byte(homePage))
+}
+
+func parseHomepage(wallpaper string) (string, error) {
 	t, err := template.New("index.html").Parse(index)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
-	t.Execute(w, map[string]string{
+	tempWriter := new(strings.Builder)
+	err = t.Execute(tempWriter, map[string]string{
 		"background": wallpaper,
 	})
+	if err != nil {
+		return "", err
+	}
+	s := tempWriter.String()
+	s = strings.ReplaceAll(s, "/assets/app.ts", "/static/app.js")
+	s = strings.ReplaceAll(s, "<style>", "<link rel=\"stylesheet\" href=\"/static/style.css\"></link>\n  <style>")
+	return s, nil
 }
 
 func setupCORS(r *http.ResponseWriter) {

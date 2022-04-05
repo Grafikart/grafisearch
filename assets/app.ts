@@ -1,8 +1,9 @@
-import { handleBang } from './bangs.js'
-import { handleCalc } from './calculator.js';
+import { bangs } from './middlewares/bangs.js'
+import { calculator } from './middlewares/calculator.js';
 import './css/app.scss'
 import type { SearchResult } from "./types";
 import { youtubeThumbnail } from './youtube.js';
+import { timer } from './middlewares/timer'
 
 const form = document.querySelector('form') as HTMLFormElement
 const url = new URL(window.location.href)
@@ -25,10 +26,15 @@ searchInput.addEventListener('blur', () => {
   document.body.classList.remove('has-focus')
 })
 
+const middlewares = [bangs, calculator, timer]
+
 function search(q: string): boolean {
   searchInput.value = q
-  if (handleBang(q) || handleCalc(q)) {
-    return false;
+  // Short-circuit the search with specific handlers
+  for (const middleware of middlewares) {
+    if (middleware(q)) {
+      return false;
+    }
   }
   document.title = `${q} - Recherche`
   document.body.classList.add('has-results')
@@ -52,7 +58,7 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
     let img = null
     if (r.url.startsWith("https://www.youtube.com/watch")) {
       img = youtubeThumbnail(r.url)
-      const [_, durationInWords, date] = r.desc.split(". ")
+      const [_, durationInWords] = r.desc.split(". ")
       const duration = durationInWords ? durationInWords
         .replaceAll(" minutes", "min")
         .replaceAll(" et ", "")
@@ -61,8 +67,8 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
       return `<div class="result result--img">
             <img class="result__img" src="${img}" alt="">
             <div>
-              <a class="result__title" href="${r.url}">${r.title}</a>
-              <a class="result__url" href="${r.url}">
+              <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
+              <a tabindex="-1" class="result__url" href="${r.url}">
                   <img src="${favicon}" alt="">
                   <span>${author}</span>
               </a>
@@ -72,8 +78,8 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
         </div>`
     }
     return `<div class="result">
-      <a class="result__title" href="${r.url}">${r.title}</a>
-      <a class="result__url" href="${r.url}">
+      <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
+      <a tabindex="-1" class="result__url" href="${r.url}">
           <img src="${favicon}" alt="">
           <span>${link}</span>
       </a>

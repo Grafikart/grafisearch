@@ -34,6 +34,13 @@
     z-index: 2;
 }
 
+.result__link:focus {
+    border: 1px solid var(--color);
+    box-shadow: 0 0 0 4px var(--colorLight);
+    border-radius: 4px;
+    outline: none;
+}
+
 .result__title {
     color: var(--title);
     font-weight: 400;
@@ -53,7 +60,7 @@
     position: relative;
     z-index: 3;
     font-size: 0.9rem;
-    color: var(--link);
+    color: var(--link)!important;
     min-height: 1.57em;
     margin: 1px 0 2px;
     display: flex;
@@ -103,7 +110,6 @@
     grid-template-columns: 120px 1fr;
     gap: 20px;
     align-content: flex-start;
-    overflow: hidden;
 
     .result__title {
         font-size: 1rem;

@@ -1,4 +1,4 @@
-const bangs = {
+const redirectBangs: Record<string, string> = {
     "!rt": "https://www.rottentomatoes.com/search?search=%s",
     "!npm": "https://www.npmjs.com/search?q=%s",
     "!t": "https://www.wordreference.com/enfr/%s",
@@ -10,14 +10,14 @@ const bangs = {
     "!w": "https://www.yr.no/en/search?q=%s"
 }
 
-export function handleBang (q: string): boolean {
+export function bangs (q: string): boolean {
     if (!q.includes('!')) {
         return false;
     }
     for (let bang of Object.keys(bangs)) {
-        if (q.includes(bang)) {
+        if (q.startsWith(bang + " ") || q.endsWith(" " + bang)) {
             const search = q.replace(bang, "").trim()
-            const url = bangs[bang]
+            const url = redirectBangs[bang]
             window.location.href = url.replace("%s", encodeURIComponent(search))
             return true
         }

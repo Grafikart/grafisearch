@@ -3,12 +3,10 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: 'assets',
   plugins: [],
   server: {
     proxy: {
       '/api': 'http://localhost:8042',
-      '/static': 'http://localhost:8042',
     }
   },
   build: {
