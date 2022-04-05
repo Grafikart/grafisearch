@@ -7,7 +7,24 @@
 
 .result {
     position: relative;
-    max-width: 600px;
+    width: calc(100% - 20px);
+    border-radius: 4px;
+    border: 1px solid transparent;
+    padding: 7px 10px;
+    margin: -7px -10px;
+}
+
+.result a:hover {
+    text-decoration: none;
+}
+
+.result:hover {
+    border: 1px solid var(--border);
+    background: var(--backgroundHover);
+
+    .result__title {
+        text-decoration: underline;
+    }
 }
 
 .result__link {
@@ -27,15 +44,12 @@
     display: block;
 }
 
-.result__title:hover {
-    text-decoration: underline;
-}
-
 .result__title:visited {
     color: #bb9af7;
 }
 
 .result__url {
+    max-width: 600px;
     position: relative;
     z-index: 3;
     font-size: 0.9rem;
@@ -62,6 +76,7 @@
 }
 
 .result__desc {
+    max-width: 600px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
