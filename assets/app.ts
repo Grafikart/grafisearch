@@ -1,4 +1,5 @@
 import { handleBang } from './bangs.js'
+import { handleCalc } from './calculator.js';
 import './css/app.scss'
 import type { SearchResult } from "./types";
 import { youtubeThumbnail } from './youtube.js';
@@ -25,11 +26,11 @@ searchInput.addEventListener('blur', () => {
 })
 
 function search(q: string): boolean {
-  if (handleBang(q)) {
+  searchInput.value = q
+  if (handleBang(q) || handleCalc(q)) {
     return false;
   }
   document.title = `${q} - Recherche`
-  searchInput.value = q
   document.body.classList.add('has-results')
   document.body.classList.add('is-loading')
   // @ts-ignore
