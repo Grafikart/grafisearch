@@ -98,8 +98,20 @@ header {
     color: var(--color);
 }
 
-.calculator-result {
+.header-text {
     margin-left: 1rem;
     font-size: 2rem;
     font-weight: bold;
+}
+
+.header.has-timer {
+    background-image: linear-gradient(to right, var(--title), var(--title));
+    background-size: calc(100% * (1 - var(--progress))) 100%;
+    background-repeat: no-repeat;
+    transition: background-size 1s linear;
+
+    .logo,
+    .header-text{
+        mix-blend-mode: plus-lighter;
+    }
 }

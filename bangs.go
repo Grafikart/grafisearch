@@ -26,8 +26,8 @@ var redirectBangs = map[string]string{
 
 func parseBangs(q string) string {
 	for bang, replace := range filterBangs {
-		if strings.Contains(q, " "+bang) ||
-			strings.Contains(q, bang+" ") {
+		if strings.HasPrefix(q, bang+" ") ||
+			strings.HasSuffix(q, " "+bang) {
 			q = strings.ReplaceAll(q, bang, replace)
 		}
 	}
@@ -39,8 +39,8 @@ func parseRedirectBangs(q string) string {
 		return ""
 	}
 	for bang, redirect := range redirectBangs {
-		if strings.Contains(q, " "+bang) ||
-			strings.Contains(q, bang+" ") {
+		if strings.HasPrefix(q, bang+" ") ||
+			strings.HasSuffix(q, " "+bang) {
 			return fmt.Sprintf(redirect, url.QueryEscape(q))
 		}
 	}

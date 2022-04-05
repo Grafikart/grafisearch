@@ -5,10 +5,6 @@ build:
 
 .PHONY: godev
 dev:
-	make -j 2 godev frontdev
-
-.PHONY: godev
-godev:
 	gow run .
 
 .PHONY: godev
