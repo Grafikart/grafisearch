@@ -1,0 +1,32 @@
+.result:hover .btn-icon {
+  display: flex;
+}
+.btn-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 60px;
+  height: 60px;
+  background-color: transparent;
+  border: none;
+  z-index: 20;
+  color: var(--colorLight);
+  cursor: pointer;
+}
+
+.btn-icon:hover{
+  color: var(--color);
+}
+
+.btn-icon.is-active {
+  color: var(--link);
+}
+
+.bad-results {
+  display: flex;
+  position: fixed;
+  inset: 20px 20px auto auto;
+}

@@ -29,46 +29,41 @@ var index string
 
 //go:embed static/*
 var staticContent embed.FS
-var homePage string
 
 func main() {
-	bingWallpaper, err := bingWallpaper()
+	homePage, err := parseHomepage()
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	homePage, err = parseHomepage(bingWallpaper)
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	// API
 	http.HandleFunc("/api/google", serveWithParser(parseGoogleResponse))
 	http.HandleFunc("/api/ddg", serveWithParser(ParseDDGResponse))
+	http.HandleFunc("/api/log", logResult)
 
 	// Static files
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
-	http.HandleFunc("/", serveHome)
+	http.HandleFunc("/", serveHome(homePage))
 
 	// Start the server
 	fmt.Println("Server started at port 8042")
 	log.Fatal(http.ListenAndServe(":8042", nil))
 }
 
-func serveWithParser(fn func(string) ([]SearchResult, error)) func(http.ResponseWriter, *http.Request) {
-	return func(res http.ResponseWriter, req *http.Request) {
-		setupCORS(&res)
-		q := req.URL.Query().Get("q")
+func serveWithParser(fn func(string) ([]SearchResult, error)) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		setupCORS(&w)
+		q := r.URL.Query().Get("q")
 		results, err := fn(parseBangs(q))
 		if err != nil {
-			serveError(res, err)
+			serveError(w, err)
 			return
 		}
 		data, err := json.Marshal(results)
 		if err != nil {
-			serveError(res, err)
+			serveError(w, err)
 			return
 		}
-		res.Write(data)
+		w.Write(data)
 	}
 }
 
@@ -81,18 +76,28 @@ func serveError(r http.ResponseWriter, err error) {
 	r.Write(body)
 }
 
-func serveHome(w http.ResponseWriter, r *http.Request) {
-	q := r.URL.Query().Get("q")
-	redirect := parseRedirectBangs(q)
-	if redirect != "" {
-		w.Header().Set("Location", redirect)
-		w.WriteHeader(http.StatusFound)
-		return
+func serveHome(homePage string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		q := r.URL.Query().Get("q")
+		redirect := parseRedirectBangs(q)
+		if redirect != "" {
+			w.Header().Set("Location", redirect)
+			w.WriteHeader(http.StatusFound)
+			return
+		}
+		w.Write([]byte(homePage))
 	}
-	w.Write([]byte(homePage))
 }
 
-func parseHomepage(wallpaper string) (string, error) {
+func parseHomepage() (string, error) {
+	wallpaper, err := bingWallpaper()
+	if err != nil {
+		return "", err
+	}
 	t, err := template.New("index.html").Parse(index)
 	if err != nil {
 		return "", err

@@ -48,6 +48,7 @@ p {
 }
 
 .layout {
+    position: relative;
     display: none;
     margin-left: 60px;
     grid-template-columns: 1fr;
@@ -72,6 +73,7 @@ p {
 
 @import 'result.scss';
 @import 'header.scss';
+@import 'btn.scss';
 
 @media only screen and (min-width: 1200px) {
     .layout {
