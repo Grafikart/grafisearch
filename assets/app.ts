@@ -39,7 +39,6 @@ function search(q: string): boolean {
   document.title = `${q} - Recherche`
   document.body.classList.add('has-results')
   document.body.classList.add('is-loading')
-  // @ts-ignore
   Promise.any([
     fetch(`/api/google?q=${q}`).then(r => r.json()).then(injectResult('#google')).catch(console.error),
     fetch(`/api/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg')).catch(console.error)
