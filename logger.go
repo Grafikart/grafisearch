@@ -53,13 +53,13 @@ func logResult(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Open the .grafisearch file
+	// Open the grafisearch.csv file
 	u, err := user.Current()
 	if err != nil {
 		logErrorResponse(w, err)
 		return
 	}
-	f, err := os.OpenFile(filepath.Join(u.HomeDir, ".grafisearch"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.OpenFile(filepath.Join(u.HomeDir, "grafisearch.csv"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		logErrorResponse(w, err)
 		return

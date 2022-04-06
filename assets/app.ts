@@ -68,10 +68,10 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
             <img class="result__img" src="${img}" alt="">
             <div>
               <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
-              <a tabindex="-1" class="result__url" href="${r.url}">
+              <div tabindex="-1" class="result__url">
                   <img src="${favicon}" alt="">
                   <span>${author}</span>
-              </a>
+              </div>
               <p class="result__desc">${duration}</p>
             </div>
             <a class="result__link" href="${r.url}"></a>
@@ -80,10 +80,10 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
     }
     return `<div class="result">
       <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
-      <a tabindex="-1" class="result__url" href="${r.url}">
+      <div tabindex="-1" class="result__url">
           <img src="${favicon}" alt="">
           <span>${link}</span>
-      </a>
+      </div>
       <p class="result__desc">${r.desc}</p>
       ${buildRelated(r)}
       <a class="result__link" href="${r.url}"></a>

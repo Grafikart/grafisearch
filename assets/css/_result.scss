@@ -15,17 +15,9 @@
     overflow: hidden;
 }
 
-.result a:hover {
-    text-decoration: none;
-}
-
 .result:hover {
     border: 1px solid var(--border);
     background: var(--backgroundHover);
-
-    .result__title {
-        text-decoration: underline;
-    }
 }
 
 .result__link {

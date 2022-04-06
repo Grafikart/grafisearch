@@ -35,6 +35,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	// API
 	http.HandleFunc("/api/google", serveWithParser(parseGoogleResponse))
 	http.HandleFunc("/api/ddg", serveWithParser(ParseDDGResponse))
@@ -45,7 +46,7 @@ func main() {
 	http.HandleFunc("/", serveHome(homePage))
 
 	// Start the server
-	fmt.Println("Server started at port 8042")
+	fmt.Println("Listening on http://localhost:8042")
 	log.Fatal(http.ListenAndServe(":8042", nil))
 }
 
@@ -53,7 +54,7 @@ func serveWithParser(fn func(string) ([]SearchResult, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		setupCORS(&w)
 		q := r.URL.Query().Get("q")
-		results, err := fn(parseBangs(q))
+		results, err := fn(parseFilterBangs(q))
 		if err != nil {
 			serveError(w, err)
 			return
@@ -94,7 +95,12 @@ func serveHome(homePage string) http.HandlerFunc {
 }
 
 func parseHomepage() (string, error) {
+
 	wallpaper, err := bingWallpaper()
+	if err != nil {
+		return "", err
+	}
+	bangs, err := json.Marshal(redirectBangs)
 	if err != nil {
 		return "", err
 	}
@@ -104,8 +110,9 @@ func parseHomepage() (string, error) {
 	}
 
 	tempWriter := new(strings.Builder)
-	err = t.Execute(tempWriter, map[string]string{
+	err = t.Execute(tempWriter, map[string]interface{}{
 		"background": wallpaper,
+		"bangs":      template.JS(bangs),
 	})
 	if err != nil {
 		return "", err

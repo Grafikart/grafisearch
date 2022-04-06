@@ -24,7 +24,7 @@ var redirectBangs = map[string]string{
 	"!w":    "https://www.yr.no/en/search?q=%s",
 }
 
-func parseBangs(q string) string {
+func parseFilterBangs(q string) string {
 	for bang, replace := range filterBangs {
 		if strings.HasPrefix(q, bang+" ") ||
 			strings.HasSuffix(q, " "+bang) {
@@ -41,7 +41,14 @@ func parseRedirectBangs(q string) string {
 	for bang, redirect := range redirectBangs {
 		if strings.HasPrefix(q, bang+" ") ||
 			strings.HasSuffix(q, " "+bang) {
-			return fmt.Sprintf(redirect, url.QueryEscape(q))
+			return fmt.Sprintf(
+				redirect,
+				url.QueryEscape(
+					strings.TrimSpace(
+						strings.ReplaceAll(q, bang, ""),
+					),
+				),
+			)
 		}
 	}
 	return ""
