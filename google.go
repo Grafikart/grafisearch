@@ -27,34 +27,35 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 	// Find natural results
 	for i := range sel.Nodes {
 		item := sel.Eq(i)
-		linkTag := item.Find("a")
-		link, _ := linkTag.Attr("href")
-		titleTag := item.Find("h3").First()
-		descTag := item.Find(".VwiC3b")
-		desc, _ := descTag.Html()
-		title := titleTag.Text()
-		link = strings.Trim(link, " ")
+		a := item.Find("a")
+		title := item.Find("h3").First()
+		desc := item.Find(".VwiC3b")
+		link := strings.TrimSpace(a.AttrOr("href", ""))
 		cite := item.Find("cite")
 
 		if link != "" && link != "#" && !strings.HasPrefix(link, "/") {
-			url, err := url.Parse(link)
+			u, err := url.Parse(link)
 			_, linkAlreadyListed := urls[link]
-			if err == nil && !isBlockedSite(url.Host) && !linkAlreadyListed {
+			if err == nil && !isBlockedSite(u.Host) && !linkAlreadyListed {
 				urls[link] = 1
 				result := SearchResult{
 					URL:     link,
-					Title:   title,
-					Desc:    desc,
-					Domain:  url.Host,
+					Title:   title.Text(),
+					Desc:    stringOrEmpty(desc.Html()),
+					Domain:  u.Host,
 					Author:  cite.First().Text(),
 					Related: extractRelated(item.Find(".fl")),
 				}
 				results = append(results, result)
+
+				extractSameSite(item, &results)
+				extractNestedLi(item, &results)
 			}
 		}
+
 	}
 
-	// Find youtube videos
+	// Extract youtube videos
 	sel = doc.Find(".RzdJxc")
 	var videos []SearchResult
 	if len(sel.Nodes) > 0 {
@@ -80,18 +81,57 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 	return results, err
 }
 
+// Extract similar answers (ex stackoverflow links)
 func extractRelated(s *goquery.Selection) []Link {
 	var selection []Link
 	for i := range s.Nodes {
 		item := s.Eq(i)
 		span := item.Find("span")
 		title := span.Text()
-		url := item.AttrOr("href", "")
-		if !strings.Contains(url, "webcache.googleusercontent") &&
-			!strings.Contains(url, "translate.google.com") &&
-			!strings.HasPrefix(url, "/search?q") {
-			selection = append(selection, Link{title, url})
+		href := item.AttrOr("href", "")
+		if !strings.Contains(href, "webcache.googleusercontent") &&
+			!strings.Contains(href, "translate.google.com") &&
+			!strings.HasPrefix(href, "/search?q") {
+			selection = append(selection, Link{title, href})
 		}
 	}
 	return selection
+}
+
+// Extract link from the section "Autres résultats sur site.com »"
+func extractSameSite(s *goquery.Selection, r *[]SearchResult) {
+	items := s.Find(".mslg")
+	for i := range items.Nodes {
+		item := items.Eq(i)
+		title := item.Find("h3")
+		a := title.Find("a")
+		href := a.AttrOr("href", "")
+		u, _ := url.Parse(href)
+		desc := title.Next()
+		*r = append(*r, SearchResult{
+			URL:    href,
+			Title:  a.Text(),
+			Desc:   strings.Trim(stringOrEmpty(desc.Html()), "<br/>"),
+			Domain: u.Host,
+		})
+	}
+}
+
+// Extract nested link "same domain"
+func extractNestedLi(s *goquery.Selection, r *[]SearchResult) {
+	items := s.Find("li.MYVUIe")
+	for i := range items.Nodes {
+		item := items.Eq(i)
+		title := item.Find("h3")
+		a := title.Parent()
+		href := a.AttrOr("href", "")
+		u, _ := url.Parse(href)
+		desc := item.Find("div[data-content-feature]")
+		*r = append(*r, SearchResult{
+			URL:    href,
+			Title:  title.Text(),
+			Desc:   strings.Trim(stringOrEmpty(desc.Find("span").Last().Html()), "<br/>"),
+			Domain: u.Host,
+		})
+	}
 }

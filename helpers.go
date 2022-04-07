@@ -7,3 +7,10 @@ func insertSlice[T any](original []T, inserted []T, n int) []T {
 	newSlice = append(newSlice, original[n:]...)
 	return newSlice
 }
+
+func stringOrEmpty(s string, err error) string {
+	if err != nil {
+		return ""
+	}
+	return s
+}
