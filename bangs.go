@@ -15,7 +15,7 @@ var filterBangs = map[string]string{
 var redirectBangs = map[string]string{
 	"!rt":   "https://www.rottentomatoes.com/search?search=%s",
 	"!npm":  "https://www.npmjs.com/search?q=%s",
-	"!t":    "https://www.wordreference.com/enfr/%s",
+	"!tr":    "https://www.wordreference.com/enfr/%s",
 	"!imdb": "https://www.imdb.com/find?s=all&q=%s",
 	"!gh":   "https://github.com/search?utf8=%E2%9C%93&q=%s",
 	"!yt":   "https://www.youtube.com/results?search_query=%s",
