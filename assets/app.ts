@@ -74,7 +74,7 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
     let img = null
     if (r.url.startsWith("https://www.youtube.com/watch")) {
       img = youtubeThumbnail(r.url)
-      const [_, durationInWords] = r.desc.split(". ")
+      const [, durationInWords] = r.desc.split(". ")
       const duration = durationInWords ? durationInWords
         .replaceAll(" minutes", "min")
         .replaceAll(" et ", "")
