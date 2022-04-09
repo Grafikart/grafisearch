@@ -36,7 +36,7 @@ func ParseDDGResponse(q string) ([]SearchResult, error) {
 			!item.HasClass("result--ad") {
 			results = append(results, SearchResult{
 				URL:    link,
-				Title:  title.Text(),
+				Title:  stringOrEmpty(title.Html()),
 				Desc:   desc,
 				Domain: u.Host,
 			})

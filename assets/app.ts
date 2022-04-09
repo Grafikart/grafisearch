@@ -40,10 +40,26 @@ function search(q: string): boolean {
   document.body.classList.add('has-results')
   document.body.classList.add('is-loading')
   Promise.any([
-    fetch(`/api/google?q=${q}`).then(r => r.json()).then(injectResult('#google')).catch(console.error),
-    fetch(`/api/ddg?q=${q}`).then(r => r.json()).then(injectResult('#ddg')).catch(console.error)
-  ]).then(() => document.body.classList.remove('is-loading'))
+    fetch(`/api/google?q=${q}`)
+      .then(r => r.json())
+      .then(redirectIfExclamationMark(q))
+      .then(injectResult('#google')),
+    fetch(`/api/ddg?q=${q}`)
+      .then(r => r.json())
+      .then(redirectIfExclamationMark(q))
+      .then(injectResult('#ddg'))
+  ])
+    .then(() => document.body.classList.remove('is-loading'))
+    .catch(console.error)
   return true
+}
+
+const redirectIfExclamationMark = (q: string) => (r: SearchResult[]): SearchResult[] => {
+  if (q.endsWith('!') && r[0] !== undefined) {
+    window.location.href = r[0].url
+    throw new Error("Redirecting")
+  }
+  return r
 }
 
 const injectResult = (selector: string) => (results: SearchResult[]) => {
@@ -162,7 +178,7 @@ if (q) {
 }
 
 // Handle history
-window.onpopstate = function (e) {
+window.onpopstate = function () {
   const q = new URL(window.location.href).searchParams.get('q')
   if (!q) {
     document.body.classList.remove('has-results')

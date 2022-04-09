@@ -40,7 +40,7 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 				urls[link] = 1
 				result := SearchResult{
 					URL:     link,
-					Title:   title.Text(),
+					Title:   stringOrEmpty(title.Html()),
 					Desc:    stringOrEmpty(desc.Html()),
 					Domain:  u.Host,
 					Author:  cite.First().Text(),
