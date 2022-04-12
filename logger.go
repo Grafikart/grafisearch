@@ -13,7 +13,7 @@ import (
 )
 
 type logError struct {
-	message string `json:"message"`
+	Message string `json:"message"`
 }
 
 type logRequest struct {
@@ -37,7 +37,7 @@ func (data logRequest) AppendToFile(w io.Writer) error {
 
 func logBoolToString(b bool) string {
 	v := "1"
-	if b == false {
+	if !b {
 		v = "0"
 	}
 	return v
@@ -72,12 +72,11 @@ func logResult(w http.ResponseWriter, r *http.Request) {
 		logErrorResponse(w, err)
 		return
 	}
-	return
 }
 
 func logErrorResponse(w http.ResponseWriter, err error) {
 	fmt.Println(err)
-	data, _ := json.Marshal(logError{message: err.Error()})
+	data, _ := json.Marshal(logError{Message: err.Error()})
 	w.WriteHeader(http.StatusInternalServerError)
 	w.Header().Set("content-type", "application/json")
 	_, err = w.Write(data)

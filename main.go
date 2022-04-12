@@ -43,6 +43,7 @@ func main() {
 
 	// Static files
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
+	http.HandleFunc("/weather", serveWeather)
 	http.HandleFunc("/", serveHome(homePage))
 
 	// Start the server
@@ -77,6 +78,11 @@ func serveError(r http.ResponseWriter, err error) {
 	r.Write(body)
 }
 
+func serveRedirect(w http.ResponseWriter, url string) {
+	w.Header().Set("Location", url)
+	w.WriteHeader(http.StatusFound)
+}
+
 func serveHome(homePage string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
@@ -86,12 +92,21 @@ func serveHome(homePage string) http.HandlerFunc {
 		q := r.URL.Query().Get("q")
 		redirect := parseRedirectBangs(q)
 		if redirect != "" {
-			w.Header().Set("Location", redirect)
-			w.WriteHeader(http.StatusFound)
+			serveRedirect(w, redirect)
 			return
 		}
 		w.Write([]byte(homePage))
 	}
+}
+
+func serveWeather(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query().Get("q")
+	url, err := extractUrlFromYrNoDk(q)
+	if err != nil {
+		serveError(w, err)
+		return
+	}
+	serveRedirect(w, url)
 }
 
 func parseHomepage() (string, error) {
