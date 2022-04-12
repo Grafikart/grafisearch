@@ -32,6 +32,7 @@ function cleanTimer () {
   header.style.removeProperty("--progress")
   headerText.innerHTML = ""
   headerText.removeEventListener('click', cleanTimer)
+  localStorage.removeItem(storageKey)
   if (timeout) {
     clearTimeout(timeout)
     timeout = null
