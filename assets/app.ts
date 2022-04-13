@@ -83,26 +83,26 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
       return `<div class="result result--img">
             <img class="result__img" src="${img}" alt="">
             <div>
-              <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
+              <a tabindex="-1" rel="noopener noreferrer" class="result__title" href="${r.url}">${r.title}</a>
               <div tabindex="-1" class="result__url">
                   <img src="${favicon}" alt="">
                   <span>${author}</span>
               </div>
               <p class="result__desc">${duration}</p>
             </div>
-            <a class="result__link" href="${r.url}"></a>
+            <a class="result__link" rel="noopener noreferrer" href="${r.url}"></a>
             ${logButton(!isGoogle, r.url)}
         </div>`
     }
     return `<div class="result">
-      <a tabindex="-1" class="result__title" href="${r.url}">${r.title}</a>
+      <a tabindex="-1" class="result__title" rel="noopener noreferrer" href="${r.url}">${r.title}</a>
       <div tabindex="-1" class="result__url">
           <img src="${favicon}" alt="">
           <span>${link}</span>
       </div>
       <p class="result__desc">${r.desc}</p>
       ${buildRelated(r)}
-      <a class="result__link" href="${r.url}"></a>
+      <a class="result__link" rel="noopener noreferrer" href="${r.url}"></a>
       ${logButton(!isGoogle, r.url)}
     </div>`
   }).join('')
@@ -115,7 +115,7 @@ const injectResult = (selector: string) => (results: SearchResult[]) => {
  * Add log button
  */
 function logButton(found: boolean, url: string) {
-  return `<a href="${url}" class="btn-icon results-confirm" data-found="${found ? "1" : "0"}">
+  return `<a rel="noopener noreferrer" href="${url}" class="btn-icon results-confirm" data-found="${found ? "1" : "0"}">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
@@ -169,7 +169,7 @@ function buildRelated(result: SearchResult) {
   if (!result.related || result.related.length === 0) {
     return '';
   }
-  return `<div class="result__related">` + result.related.map(l => `<a href="${l.url}">${l.title}</a>`).join('') + `</div>`
+  return `<div class="result__related">` + result.related.map(l => `<a rel="noopener noreferrer" href="${l.url}">${l.title}</a>`).join('') + `</div>`
 }
 
 const q = url.searchParams.get('q')
