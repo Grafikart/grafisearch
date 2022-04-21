@@ -1,9 +1,10 @@
 .header {
     position: absolute;
-    inset: 20% 0 auto 0;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-bottom: 20%;
 }
 
 .logo {
@@ -30,7 +31,8 @@
     height: 100%;
 }
 
-.has-results header {
+.has-results .header {
+    padding-bottom: 0;
     height: 100px;
     display: flex;
     align-items: center;
@@ -105,7 +107,7 @@
 }
 
 .header.has-timer {
-    background-image: linear-gradient(to right, var(--title), var(--title));
+    background-image: linear-gradient(to right,#7aa2f782,#7aa2f7e3);
     background-size: calc(100% * (1 - var(--progress))) 100%;
     background-repeat: no-repeat;
     transition: background-size 1s linear;
