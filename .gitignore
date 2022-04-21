@@ -1,5 +1,6 @@
 # Goreleaser
 dist/
+/grafisearch
 
 # Assets
 /static/app.js
