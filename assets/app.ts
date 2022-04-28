@@ -4,6 +4,7 @@ import './css/app.scss'
 import type { SearchResult } from "./types";
 import { youtubeThumbnail } from './youtube.js';
 import { timer } from './middlewares/timer'
+import { uppercase } from './middlewares/uppercase.js';
 
 const form = document.querySelector('form') as HTMLFormElement
 const url = new URL(window.location.href)
@@ -26,7 +27,7 @@ searchInput.addEventListener('blur', () => {
   document.body.classList.remove('has-focus')
 })
 
-const middlewares = [bangs, calculator, timer]
+const middlewares = [bangs, calculator, timer, uppercase]
 
 function search(q: string): boolean {
   searchInput.value = q
