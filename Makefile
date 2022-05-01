@@ -1,12 +1,12 @@
-.PHONY: godev
+.PHONY: build
 build:
 	pnpm run build
 	go build
 
-.PHONY: godev
+.PHONY: dev
 dev:
-	gow run .
+	go run .
 
-.PHONY: godev
+.PHONY: frontdev
 frontdev:
 	pnpm run dev
