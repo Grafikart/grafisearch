@@ -1,3 +1,3 @@
 interface Window {
-  BANGS: Record<string, string>
+	BANGS: Record<string, string>
 }

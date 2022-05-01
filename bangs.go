@@ -22,6 +22,7 @@ var redirectBangs = map[string]string{
 	"!d":    "https://www.larousse.fr/dictionnaires/francais/%s",
 	"!g":    "https://www.google.com/search?q=%s",
 	"!w":    "/weather?q=%s",
+	"!wk":   "https://fr.wikipedia.org/w/index.php?search=%s",
 	"!gmap": "https://www.google.fr/maps?hl=fr&q=%s",
 }
 

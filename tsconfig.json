@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "noEmit": true,
-    "target": "esnext",
-    "useDefineForClassFields": true,
-    "module": "esnext",
-    "baseUrl": ".",
-    "lib": ["ESNext", "DOM"],
-    "strict": true
-  },
-  "include": ["assets/**/*.d.ts", "assets/**/*.ts"],
+	"compilerOptions": {
+		"noEmit": true,
+		"target": "esnext",
+		"useDefineForClassFields": true,
+		"module": "esnext",
+		"baseUrl": ".",
+		"lib": ["ESNext", "DOM"],
+		"strict": true
+	},
+	"include": ["assets/**/*.d.ts", "assets/**/*.ts"]
 }

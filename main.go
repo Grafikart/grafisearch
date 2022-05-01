@@ -53,7 +53,7 @@ func main() {
 
 func serveWithParser(fn func(string) ([]SearchResult, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		setupCORS(&w)
+		setupCORS(w)
 		q := r.URL.Query().Get("q")
 		results, err := fn(parseFilterBangs(q))
 		if err != nil {
@@ -110,7 +110,6 @@ func serveWeather(w http.ResponseWriter, r *http.Request) {
 }
 
 func parseHomepage() (string, error) {
-
 	wallpaper, err := bingWallpaper()
 	if err != nil {
 		return "", err
@@ -138,8 +137,8 @@ func parseHomepage() (string, error) {
 	return s, nil
 }
 
-func setupCORS(r *http.ResponseWriter) {
-	(*r).Header().Set("Access-Control-Allow-Origin", "*")
-	(*r).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*r).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+func setupCORS(r http.ResponseWriter) {
+	r.Header().Set("Access-Control-Allow-Origin", "*")
+	r.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	r.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }

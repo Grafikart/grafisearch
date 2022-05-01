@@ -15,7 +15,6 @@ const (
 )
 
 func bingWallpaper() (string, error) {
-
 	client := &http.Client{
 		Timeout: 5 * time.Second,
 	}
