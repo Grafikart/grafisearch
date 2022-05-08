@@ -64,12 +64,12 @@ func parseGoogleResponse(q string) ([]SearchResult, error) {
 			anchor := item.Find("a")
 			href := anchor.AttrOr("href", "")
 			cite := anchor.Find("cite").Parent()
-			title := anchor.AttrOr("aria-label", "")
-			parts := strings.Split(title, ",")
+			title := item.Find("[role=\"heading\"]").Find("div").First().Text()
+			description := item.Find("span[aria-hidden=\"true\"]").First().Text()
 			videos = append(videos, SearchResult{
 				URL:    href,
-				Title:  parts[0],
-				Desc:   parts[1],
+				Title:  title,
+				Desc:   description,
 				Domain: "youtube.com",
 				Author: cite.First().Text(),
 			})
