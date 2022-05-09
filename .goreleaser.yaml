@@ -13,6 +13,8 @@ builds:
     goarch:
       - amd64
       - arm64
+    ldflags:
+      - -H windowsgui
 archives:
   - replacements:
       darwin: Darwin
