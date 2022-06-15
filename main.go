@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -45,6 +46,7 @@ func main() {
 	http.Handle("/static/", http.FileServer(http.FS(staticContent)))
 	http.HandleFunc("/weather", serveWeather)
 	http.HandleFunc("/", serveHome(homePage))
+	http.HandleFunc("/stats", serveStats)
 
 	// Start the server
 	fmt.Println("Listening on http://localhost:8042")
@@ -109,8 +111,26 @@ func serveWeather(w http.ResponseWriter, r *http.Request) {
 	serveRedirect(w, url)
 }
 
-func parseHomepage() (string, error) {
+func serveStats(w http.ResponseWriter, r *http.Request) {
+	buf, err := ioutil.ReadFile("stats.html")
+	if err != nil {
+		serveError(w, err)
+		return
+	}
+	t, err := template.New("stats.html").Parse(string(buf))
+	if err != nil {
+		serveError(w, err)
+		return
+	}
+	stats, err := loadStats()
+	if err != nil {
+		serveError(w, err)
+		return
+	}
+	t.Execute(w, stats)
+}
 
+func parseHomepage() (string, error) {
 	wallpaper, err := bingWallpaper()
 	if err != nil {
 		return "", err
