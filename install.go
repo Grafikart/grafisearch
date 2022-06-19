@@ -4,12 +4,12 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
-	"html/template"
 	"os"
 	"os/exec"
 	"os/user"
 	"path/filepath"
 	"runtime"
+	"text/template"
 
 	"github.com/fatih/color"
 )
@@ -57,7 +57,6 @@ func installAppMacOS() error {
 	}
 
 	t.Execute(f, appInfo{Path: exePath})
-	fmt.Println(plistPath)
 	cmd := exec.Command("launchctl", "load", plistPath)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
