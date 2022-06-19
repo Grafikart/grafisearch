@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -32,6 +33,12 @@ var index string
 var staticContent embed.FS
 
 func main() {
+
+	if len(os.Args) >= 2 && os.Args[1] == "install" {
+		installApp()
+		return
+	}
+
 	homePage, err := parseHomepage()
 	if err != nil {
 		panic(err)
