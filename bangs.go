@@ -23,6 +23,7 @@ var redirectBangs = map[string]string{
 	"!g":    "https://www.google.com/search?q=%s",
 	"!w":    "/weather?q=%s",
 	"!gmap": "https://www.google.fr/maps?hl=fr&q=%s",
+	"!img":  "https://duckduckgo.com/?q=%s&iax=images&ia=images",
 }
 
 func parseFilterBangs(q string) string {
