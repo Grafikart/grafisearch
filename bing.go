@@ -48,3 +48,26 @@ func bingWallpaper() (string, error) {
 
 	return fmt.Sprintf("%s%s_%s", bingURL, imgElem.SelectElement("urlBase").Text(), "1920x1080.jpg"), nil
 }
+
+// Fetch bing wallpaper and retry every 30 seconds if necessary
+func bingWallpaperFetcher() chan string {
+	retries := 0
+	c := make(chan string, 1)
+	t := time.NewTicker(time.Second * 30)
+	go func() {
+		defer t.Stop()
+		for ; true; <-t.C {
+			retries++
+			w, err := bingWallpaper()
+			if err == nil {
+				c <- w
+				close(c)
+				return
+			} else if retries > 4 {
+				return
+			}
+		}
+	}()
+
+	return c
+}

@@ -69,7 +69,7 @@ func installAppMacOS() error {
 
 	color.Green("Le service a été installé dans %s et activé !\n", plistPath)
 	fmt.Println("Pour le désactiver :")
-	color.Blue("launchctl unload com.grafikart.grafisearch.plist")
+	color.Blue("launchctl unload %s", plistPath)
 	return nil
 }
 

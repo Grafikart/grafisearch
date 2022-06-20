@@ -33,16 +33,24 @@ var index string
 var staticContent embed.FS
 
 func main() {
-
 	if len(os.Args) >= 2 && os.Args[1] == "install" {
 		installApp()
 		return
 	}
 
-	homePage, err := parseHomepage()
-	if err != nil {
-		panic(err)
-	}
+	result, _ := parseHomepage("")
+
+	homePage := &result
+	c := bingWallpaperFetcher()
+	go func() {
+		for wallpaper := range c {
+			result, err := parseHomepage(wallpaper)
+			if err == nil {
+				*homePage = result
+			}
+			return
+		}
+	}()
 
 	// API
 	http.HandleFunc("/api/google", serveWithParser(parseGoogleResponse))
@@ -92,7 +100,7 @@ func serveRedirect(w http.ResponseWriter, url string) {
 	w.WriteHeader(http.StatusFound)
 }
 
-func serveHome(homePage string) http.HandlerFunc {
+func serveHome(homePage *string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
 			w.WriteHeader(http.StatusNotFound)
@@ -104,7 +112,7 @@ func serveHome(homePage string) http.HandlerFunc {
 			serveRedirect(w, redirect)
 			return
 		}
-		w.Write([]byte(homePage))
+		w.Write([]byte(*homePage))
 	}
 }
 
@@ -137,11 +145,7 @@ func serveStats(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, stats)
 }
 
-func parseHomepage() (string, error) {
-	wallpaper, err := bingWallpaper()
-	if err != nil {
-		return "", err
-	}
+func parseHomepage(wallpaper string) (string, error) {
 	bangs, err := json.Marshal(redirectBangs)
 	if err != nil {
 		return "", err
