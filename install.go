@@ -21,67 +21,78 @@ type appInfo struct {
 //go:embed install/com.grafisearch.plist
 var macOSService string
 
-func installApp() {
+//go:embed install/grafisearch.service
+var linuxService string
+
+func installApp() error {
 	var err error
+	user, err := user.Current()
+	if err != nil {
+		return fmt.Errorf("impossible de récupérer l'utilisateur courant %w", err)
+	}
+	home := user.HomeDir
 	switch runtime.GOOS {
 	case "darwin":
-		err = installAppMacOS()
+		plistPath := filepath.Join(home, "Library/LaunchAgents/com.grafikart.grafisearch.plist")
+		err = installService(
+			macOSService,
+			plistPath,
+			exec.Command("launchctl", "load", plistPath),
+		)
+		if err == nil {
+			color.Green("Le service a été installé dans %s et activé !\n", plistPath)
+			fmt.Println("")
+			fmt.Println("Pour le désactiver :")
+			color.Blue("launchctl unload %s", plistPath)
+		}
+	case "linux":
+		linuxPath := filepath.Join(home, ".config/systemd/user/grafisearch.service")
+		err = installService(
+			linuxService,
+			linuxPath,
+			exec.Command("systemctl", "enable", "--user", "grafisearch.service"),
+		)
+		if err == nil {
+			color.Green("Le service a été installé dans %s et activé !\n", linuxPath)
+			fmt.Println("")
+			fmt.Println("Pour le démarrer :")
+			color.Blue("systemctl start --user grafisearch.service")
+			fmt.Println("")
+			fmt.Println("Pour le désactiver :")
+			color.Blue("systemctl disable --user grafisearch.service")
+		}
 	default:
-		err = fmt.Errorf("Système d'exploitation non géré")
+		return fmt.Errorf("système d'exploitation non géré %s", runtime.GOOS)
 	}
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
-func installAppMacOS() error {
+func installService(tpl string, dest string, cmd *exec.Cmd) error {
 	exePath, err := getCurrentExecPath()
 	if err != nil {
 		return err
 	}
 
-	t, err := template.New("com.grafisearch.plist").Parse(macOSService)
+	t, err := template.New("service").Parse(tpl)
 	if err != nil {
-		return fmt.Errorf("Impossible de parser le template %w", err)
+		return fmt.Errorf("impossible de parser le template %w", err)
 	}
 
-	user, err := user.Current()
+	f, err := os.Create(dest)
 	if err != nil {
-		return fmt.Errorf("Impossible de récupérer l'utilisateur courant %w", err)
-	}
-	home := user.HomeDir
-	plistPath := filepath.Join(home, "Library/LaunchAgents/com.grafikart.grafisearch.plist")
-	f, err := os.Create(plistPath)
-	if err != nil {
-		return fmt.Errorf("Impossible de créer le fichier plist %w", err)
+		return fmt.Errorf("impossible de créer le fichier de service %w", err)
 	}
 
 	t.Execute(f, appInfo{Path: exePath})
-	cmd := exec.Command("launchctl", "load", plistPath)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = &stderr
 	err = cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Impossible d'éxécuter launctl %s %w", stderr.String(), err)
+		return fmt.Errorf("impossible de démarrer le service %s %w", stderr.String(), err)
 	}
-
-	color.Green("Le service a été installé dans %s et activé !\n", plistPath)
-	fmt.Println("Pour le désactiver :")
-	color.Blue("launchctl unload %s", plistPath)
 	return nil
-}
-
-func getCurrentExecDir() (dir string, err error) {
-	absPath, err := getCurrentExecPath()
-	if err != nil {
-		return "", err
-	}
-
-	dir = filepath.Dir(absPath)
-
-	return dir, nil
 }
 
 func getCurrentExecPath() (dir string, err error) {

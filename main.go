@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -29,12 +28,18 @@ type SearchResult struct {
 //go:embed index.html
 var index string
 
+//go:embed stats.html
+var statsHTML string
+
 //go:embed static/*
 var staticContent embed.FS
 
 func main() {
 	if len(os.Args) >= 2 && os.Args[1] == "install" {
-		installApp()
+		err := installApp()
+		if err != nil {
+			panic(err)
+		}
 		return
 	}
 
@@ -127,12 +132,7 @@ func serveWeather(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveStats(w http.ResponseWriter, r *http.Request) {
-	buf, err := ioutil.ReadFile("stats.html")
-	if err != nil {
-		serveError(w, err)
-		return
-	}
-	t, err := template.New("stats.html").Parse(string(buf))
+	t, err := template.New("stats.html").Parse(statsHTML)
 	if err != nil {
 		serveError(w, err)
 		return
