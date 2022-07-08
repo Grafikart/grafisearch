@@ -4,6 +4,7 @@ import (
 	"bytes"
 	_ "embed"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"os/user"
@@ -65,12 +66,15 @@ func installApp() error {
 		// https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-service?view=powershell-7.2
 		// Require admin right | Possible solution : Start-Process [...] -Verbs RunAs
 		serviceName := "GrafiSearch"
-		var execPath string
-		execPath, err = getCurrentExecPath()
+		execPath := filepath.Join(home, fmt.Sprintf("AppData/Local/%s", serviceName), "grafisearch.exe")
+		err = CopyCurrentExecInPath(execPath)
+		if err != nil {
+			return err
+		}
 		command := fmt.Sprintf("New-Service -Name %s -BinaryPathName %s -StartupType Automatic", serviceName, execPath)
 		_, err = exec.Command("powershell.exe", command).Output()
 		if err == nil {
-			color.Green("Le service a été ajouté avec le nom %s et activé %s !\n", serviceName, execPath)
+			color.Green("Le service a été ajouté avec le nom %s et activé !\n", serviceName)
 			fmt.Println("")
 			fmt.Println("Pour le démarrer :")
 			color.Blue("Start-Service -Name %s", serviceName)
@@ -127,4 +131,45 @@ func getCurrentExecPath() (dir string, err error) {
 	}
 
 	return absPath, nil
+}
+
+func CopyCurrentExecInPath(dst string) (err error) {
+	src, err := getCurrentExecPath()
+	if err != nil {
+		return err
+	}
+
+	err = CopyFile(src, dst)
+
+	return err
+}
+
+func CopyFile(src string, dst string) (err error) {
+	fin, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+
+	defer fin.Close()
+
+	// Create folder if doesn't exist
+	dirPath := filepath.Dir(dst)
+	if _, err := os.Stat(dirPath); os.IsNotExist(err) {
+		err = os.MkdirAll(dirPath, os.ModeDir)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	fout, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+
+	defer fout.Close()
+
+	_, err = io.Copy(fout, fin)
+
+	return err
 }
