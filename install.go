@@ -61,6 +61,26 @@ func installApp() error {
 			fmt.Println("Pour le désactiver :")
 			color.Blue("systemctl disable --user grafisearch.service")
 		}
+	case "windows":
+		// https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.management/new-service?view=powershell-7.2
+		// Require admin right | Possible solution : Start-Process [...] -Verbs RunAs
+		serviceName := "GrafiSearch"
+		var execPath string
+		execPath, err = getCurrentExecPath()
+		command := fmt.Sprintf("New-Service -Name %s -BinaryPathName %s -StartupType Automatic", serviceName, execPath)
+		_, err = exec.Command("powershell.exe", command).Output()
+		if err == nil {
+			color.Green("Le service a été ajouté avec le nom %s et activé %s !\n", serviceName, execPath)
+			fmt.Println("")
+			fmt.Println("Pour le démarrer :")
+			color.Blue("Start-Service -Name %s", serviceName)
+			fmt.Println("")
+			fmt.Println("Pour le désactiver :")
+			color.Blue("Stop-Service -Name %s", serviceName)
+			fmt.Println("")
+			fmt.Println("Pour le supprimer :")
+			color.Blue("Remove-Service -Name %s", serviceName)
+		}
 	default:
 		return fmt.Errorf("système d'exploitation non géré %s", runtime.GOOS)
 	}
