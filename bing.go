@@ -25,16 +25,17 @@ func bingWallpaper() (string, error) {
 		return "", err
 	}
 	request.Header.Add("Referer", bingURL)
-	request.Header.Add("User-Agent", `Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 10.0; WOW64; Trident/8.0; .NET4.0C; .NET4.0E)`)
+	request.Header.Add("User-Agent", `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36`)
+	request.Header.Add("Accept", `application/xml`)
 
 	resp, err := client.Do(request)
-	if err != nil {
+	if err != nil || resp.StatusCode != http.StatusOK {
 		return "", err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	if err != nil || len(body) == 0 {
 		return "", fmt.Errorf("failed to parse request body from %s", bingURL)
 	}
 
