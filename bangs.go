@@ -15,13 +15,16 @@ var filterBangs = map[string]string{
 var redirectBangs = map[string]string{
 	"!rt":   "https://www.rottentomatoes.com/search?search=%s",
 	"!npm":  "https://www.npmjs.com/search?q=%s",
-	"!tr":   "https://www.wordreference.com/enfr/%s",
+	"!wr":   "https://www.wordreference.com/enfr/%s",
+	"!tr":   "https://www.deepl.com/fr/translator#en/fr/%s",
 	"!imdb": "https://www.imdb.com/find?s=all&q=%s",
 	"!gh":   "https://github.com/search?q=%s",
 	"!yt":   "https://www.youtube.com/results?search_query=%s",
 	"!d":    "https://www.larousse.fr/dictionnaires/francais/%s",
 	"!g":    "https://www.google.com/search?q=%s",
 	"!w":    "/weather?q=%s",
+	"!c":    "https://www.conjugaisonfrancaise.com/recherche.html?q=%s",
+	"!ia":    "https://www.phind.com/search?q=%s&c=&source=searchbox&init=true",
 	"!gmap": "https://www.google.fr/maps?hl=fr&q=%s",
 	"!img":  "https://duckduckgo.com/?q=%s&iax=images&ia=images",
 }
