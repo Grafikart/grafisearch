@@ -4,17 +4,24 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "build": "tsc && vite build",
+    "check": "tsc",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "prettier": "^2.6.2",
-    "sass": "^1.49.11",
-    "typescript": "^4.5.4",
-    "vite": "^2.9.0"
+    "@preact/preset-vite": "^2.5.0",
+    "@types/preact-custom-element": "^4.0.3",
+    "prettier": "^3.0.3",
+    "sass": "^1.69.5",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0"
   },
   "dependencies": {
-    "@types/node": "^17.0.23"
+    "@preact/signals": "^1.2.1",
+    "@types/node": "^20.8.10",
+    "clsx": "^2.0.0",
+    "preact": "^10.18.1",
+    "preact-custom-element": "^4.3.0"
   }
 }

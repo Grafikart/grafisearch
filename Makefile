@@ -1,11 +1,11 @@
 .PHONY: godev
-build: 
+build:
 	pnpm run build
 	go build
 
 .PHONY: godev
 dev:
-	gow run .
+	gow run . --port=8000
 
 .PHONY: frontdev
 frontdev:
@@ -15,6 +15,6 @@ frontdev:
 install: grafisearch
 	./grafisearch install
 
-grafisearch: 
+grafisearch:
 	pnpm run build
 	go build

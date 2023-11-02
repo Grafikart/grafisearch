@@ -1,3 +1,7 @@
 interface Window {
-  BANGS: Record<string, string>
+  BANGS: Record<string, string>;
+}
+
+interface GlobalEventHandlersEventMap {
+  search: CustomEvent<string>;
 }
