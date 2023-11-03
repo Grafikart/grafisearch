@@ -25,6 +25,9 @@ devDependencies:
   '@preact/preset-vite':
     specifier: ^2.5.0
     version: 2.6.0(@babel/core@7.23.2)(preact@10.18.1)(vite@4.5.0)
+  '@types/dom-view-transitions':
+    specifier: ^1.0.3
+    version: 1.0.3
   '@types/preact-custom-element':
     specifier: ^4.0.3
     version: 4.0.3
@@ -589,6 +592,10 @@ packages:
     dependencies:
       estree-walker: 2.0.2
       picomatch: 2.3.1
+    dev: true
+
+  /@types/dom-view-transitions@1.0.3:
+    resolution: {integrity: sha512-1X/BUVdo9pKho8SFWVNcIz0fasBAqwcAvWGMt0Z57LUN68I4AtdrgTUXFryZW/OHUSO+9OH9KtSgCTMrzOZdRg==}
     dev: true
 
   /@types/node@20.8.10:

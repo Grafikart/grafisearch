@@ -11,6 +11,7 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
+    "@types/dom-view-transitions": "^1.0.3",
     "@types/preact-custom-element": "^4.0.3",
     "prettier": "^3.0.3",
     "sass": "^1.69.5",

@@ -3,6 +3,7 @@ import { bangs } from "../middlewares/bangs.js";
 import { calculator } from "../middlewares/calculator.js";
 import { timer } from "../middlewares/timer";
 import { uppercase } from "../middlewares/uppercase.js";
+import { withViewTransition } from "../functions/dom.ts";
 
 /**
  * Check if the query match one of the middleware (short circuit the search)
@@ -48,10 +49,8 @@ export const pushSearch = (q: string) => {
     return;
   }
 
-  // Short-circuit the search with specific handlers
-  document.title = `${q} - Recherche`;
   const url = new URL(window.location.href);
-  url.searchParams.set("q", q);
+  q ? url.searchParams.set("q", q) : url.searchParams.delete("q");
   history.pushState(null, "", url.toString());
   search.value = {
     q,
@@ -62,10 +61,10 @@ export const pushSearch = (q: string) => {
 effect(() => {
   if (search.value.q) {
     document.title = `${search.value.q} - Recherche`;
-    document.body.classList.add("has-results");
+    withViewTransition(() => document.body.classList.add("has-results"));
   } else {
     document.title = `Recherche`;
-    document.body.classList.remove("has-results");
+    withViewTransition(() => document.body.classList.remove("has-results"));
   }
 });
 

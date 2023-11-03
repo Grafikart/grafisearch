@@ -86,3 +86,8 @@ p {
         margin-left: 150px;
     }
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: .3s;
+}

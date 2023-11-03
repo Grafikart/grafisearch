@@ -46,6 +46,7 @@
 }
 
 .search-form {
+    view-transition-name: search-form;
     width: calc(100vw - 350px);
     max-width: 600px;
     border-radius: 52px;
