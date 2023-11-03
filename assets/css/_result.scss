@@ -5,6 +5,10 @@
     align-content: flex-start;
 }
 
+.results.is-fetching {
+    opacity: .3;
+}
+
 .result {
     position: relative;
     width: calc(100% - 20px);

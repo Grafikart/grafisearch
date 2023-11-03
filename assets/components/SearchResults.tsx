@@ -4,12 +4,14 @@ import { searchableQuery } from "../signals/search.ts";
 import { youtubeThumbnail } from "../youtube.ts";
 import clsx from "clsx";
 import { LogButton } from "./LogButton.tsx";
+import { useSignalClass } from "../hooks/useSignalClass.ts";
 
 type Props = {
   source: string;
+  element: HTMLElement;
 };
 
-export function SearchResults({ source }: Props) {
+export function SearchResults({ source, element }: Props) {
   const data = useSignal([] as SearchResult[]);
   const isFetching = useSignal(false);
 
@@ -17,6 +19,7 @@ export function SearchResults({ source }: Props) {
     if (!searchableQuery.value) {
       return;
     }
+    isFetching.value = true;
     const url = new URL(source, window.location.origin);
     url.searchParams.set("q", searchableQuery.value);
     fetch(url)
@@ -27,6 +30,8 @@ export function SearchResults({ source }: Props) {
         isFetching.value = false;
       });
   });
+
+  useSignalClass(element, "is-fetching", isFetching);
 
   return (
     <>
@@ -62,9 +67,12 @@ function Item({ result: r }: { result: SearchResult }) {
     <div class={clsx("result", isYoutubeURL && "result--img")}>
       {thumbnail && <img className="result__img" src={thumbnail} alt="" />}
       <div>
-        <a class="result__title" rel="noopener noreferrer" href={r.url}>
-          {r.title}
-        </a>
+        <a
+          class="result__title"
+          rel="noopener noreferrer"
+          href={r.url}
+          dangerouslySetInnerHTML={{ __html: r.title }}
+        />
         <div class="result__url">
           <img src={favicon} alt="" />
           <span>{source}</span>
