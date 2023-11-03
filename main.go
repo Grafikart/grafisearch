@@ -120,6 +120,10 @@ func serveHome(homePage *string) http.HandlerFunc {
 			serveRedirect(w, redirect)
 			return
 		}
+		if q != "" {
+			w.Write([]byte(strings.ReplaceAll(*homePage, "has-focus", "has-focus has-results")))
+			return
+		}
 		w.Write([]byte(*homePage))
 	}
 }
