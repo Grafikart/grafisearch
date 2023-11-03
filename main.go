@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"html/template"
 	"log"
@@ -47,6 +48,8 @@ func main() {
 
 	homePage := &result
 	c := bingWallpaperFetcher()
+	port := flag.String("port", "8042", "port to listen to")
+	flag.Parse()
 	go func() {
 		for wallpaper := range c {
 			result, err := parseHomepage(wallpaper)
@@ -69,8 +72,8 @@ func main() {
 	http.HandleFunc("/stats", serveStats)
 
 	// Start the server
-	fmt.Println("Listening on http://localhost:8042")
-	log.Fatal(http.ListenAndServe(":8042", nil))
+	fmt.Println("Listening on http://localhost:" + *port)
+	log.Fatal(http.ListenAndServe(":"+*port, nil))
 }
 
 func serveWithParser(fn func(string) ([]SearchResult, error)) http.HandlerFunc {
@@ -117,7 +120,11 @@ func serveHome(homePage *string) http.HandlerFunc {
 			serveRedirect(w, redirect)
 			return
 		}
-		w.Write([]byte(*homePage))
+		body := *homePage
+		if q != "" {
+			body = strings.ReplaceAll(body, "has-focus", "has-focus has-results")
+		}
+		w.Write([]byte(body))
 	}
 }
 
