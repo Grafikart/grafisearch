@@ -44,7 +44,7 @@ export function SearchForm({ element }: Props) {
   });
 
   useSignalClass(element, "is-expanded", isMultiline);
-  useSignalClass(element, "is-focused", isFocused);
+  useSignalClass(document.body, "has-focus", isFocused);
 
   return (
     <>
