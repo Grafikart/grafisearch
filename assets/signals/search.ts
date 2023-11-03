@@ -59,11 +59,17 @@ export const pushSearch = (q: string) => {
 };
 
 effect(() => {
-  if (search.value.q) {
-    document.title = `${search.value.q} - Recherche`;
-    withViewTransition(() => document.body.classList.add("has-results"));
+  if (searchQuery.value) {
+    document.title = `${searchQuery.value} - Recherche`;
   } else {
     document.title = `Recherche`;
+  }
+});
+
+effect(() => {
+  if (searchableQuery.value) {
+    withViewTransition(() => document.body.classList.add("has-results"));
+  } else {
     withViewTransition(() => document.body.classList.remove("has-results"));
   }
 });
