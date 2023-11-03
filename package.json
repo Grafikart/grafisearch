@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/plugin-transform-react-jsx": "^7.22.15",
     "@preact/preset-vite": "^2.5.0",
     "@types/dom-view-transitions": "^1.0.3",
     "@types/preact-custom-element": "^4.0.3",
