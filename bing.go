@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 
@@ -34,7 +34,7 @@ func bingWallpaper() (string, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil || len(body) == 0 {
 		return "", fmt.Errorf("failed to parse request body from %s", bingURL)
 	}
@@ -51,13 +51,14 @@ func bingWallpaper() (string, error) {
 }
 
 // Fetch bing wallpaper and retry every 30 seconds if necessary
-func bingWallpaperFetcher() chan string {
+func fetchBingWallpaper() string {
 	retries := 0
 	c := make(chan string, 1)
 	t := time.NewTicker(time.Second * 30)
 	go func() {
 		defer t.Stop()
-		for ; true; <-t.C {
+		for {
+			<-t.C
 			retries++
 			w, err := bingWallpaper()
 			if err == nil {
@@ -65,10 +66,12 @@ func bingWallpaperFetcher() chan string {
 				close(c)
 				return
 			} else if retries > 4 {
+				c <- ""
+				close(c)
 				return
 			}
 		}
 	}()
 
-	return c
+	return <-c
 }

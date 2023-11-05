@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 type Link struct {
@@ -47,16 +48,27 @@ func main() {
 	result, _ := parseHomepage("")
 
 	homePage := &result
-	c := bingWallpaperFetcher()
 	port := flag.String("port", "8042", "port to listen to")
 	flag.Parse()
-	go func() {
-		for wallpaper := range c {
-			result, err := parseHomepage(wallpaper)
-			if err == nil {
-				*homePage = result
-			}
+
+	updateHomepageTemplate := func() {
+		wallpaper := fetchBingWallpaper()
+		if wallpaper == "" {
 			return
+		}
+		result, err := parseHomepage(wallpaper)
+		if err == nil {
+			*homePage = result
+		}
+	}
+
+	// Update wallpaper every hour
+	ticker := time.NewTicker(1 * time.Hour)
+	go func() {
+		updateHomepageTemplate()
+		for {
+			<-ticker.C
+			updateHomepageTemplate()
 		}
 	}()
 
