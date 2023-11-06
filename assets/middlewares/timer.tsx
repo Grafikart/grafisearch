@@ -9,6 +9,7 @@ import {
 import { headerText } from "../signals/headerText.tsx";
 import { secondsToString } from "../functions/time.ts";
 import { useEffect } from "preact/compat";
+import { setPageTitle } from "../functions/dom.ts";
 
 const header = document.querySelector(".header") as HTMLElement;
 
@@ -100,7 +101,7 @@ function TimerComponent() {
   });
 
   useSignalEffect(() => {
-    document.title = `${durationText.value} Recherche`;
+    setPageTitle(durationText.value);
   });
 
   return <div onClick={clearTimerInfo}>{durationText}</div>;

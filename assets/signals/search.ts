@@ -3,7 +3,7 @@ import { bangs } from "../middlewares/bangs.js";
 import { calculator } from "../middlewares/calculator.js";
 import { timer } from "../middlewares/timer";
 import { uppercase } from "../middlewares/uppercase.js";
-import { withViewTransition } from "../functions/dom.ts";
+import { setPageTitle, withViewTransition } from "../functions/dom.ts";
 
 /**
  * Check if the query match one of the middleware (short circuit the search)
@@ -59,11 +59,7 @@ export const pushSearch = (q: string) => {
 };
 
 effect(() => {
-  if (searchQuery.value) {
-    document.title = `${searchQuery.value} - Recherche`;
-  } else {
-    document.title = `Recherche`;
-  }
+  setPageTitle(searchQuery.value)
 });
 
 effect(() => {
