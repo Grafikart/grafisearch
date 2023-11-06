@@ -8,6 +8,8 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -H windowsgui
 
 archives:
   - format: tar.gz
