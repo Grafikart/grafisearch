@@ -1,64 +1,58 @@
-import { useRef } from "preact/hooks";
-import type { JSX } from "preact/jsx-runtime";
 import { pushSearch, searchQuery } from "../signals/search.ts";
-import { useSignal, useSignalEffect } from "@preact/signals";
 import { useSignalClass } from "../hooks/useSignalClass.ts";
+import { createEffect, createSignal, type JSX, onMount } from "solid-js";
+import { customElement, noShadowDOM } from "solid-element";
 
-type Props = {
-  element: HTMLElement;
-};
+customElement("search-form", {}, (_, { element }) => {
+  if (!(element instanceof HTMLElement)) {
+    return null;
+  }
+  noShadowDOM();
+  const [isFocused, setFocused] = createSignal(false);
+  const [isMultiline, setMultiline] = createSignal(false);
+  let inputRef: HTMLDivElement;
 
-export function SearchForm({ element }: Props) {
-  const isFocused = useSignal(false);
-  const isMultiline = useSignal(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleKeyDown: JSX.KeyboardEventHandler<HTMLDivElement> = (e) => {
+  const handleKeyDown: JSX.EventHandler<HTMLDivElement, KeyboardEvent> = (
+    e: KeyboardEvent,
+  ) => {
     if (e.key === "Enter" && !e.shiftKey) {
       handleSubmit(e);
     }
   };
 
-  const handleInput: JSX.GenericEventHandler<HTMLDivElement> = (e) => {
-    isMultiline.value = e.currentTarget.innerText.includes("\n");
+  const handleInput: JSX.EventHandler<HTMLDivElement, Event> = (e) => {
+    setMultiline(e.currentTarget.innerText.includes("\n"));
   };
 
-  const handleSubmit: JSX.GenericEventHandler<HTMLElement> = (e) => {
+  const handleSubmit = (e: Event) => {
     e.preventDefault();
     e.stopPropagation();
-    pushSearch(inputRef.current!.innerText);
+    pushSearch(inputRef.innerText);
   };
 
-  useSignalEffect(() => {
-    if (searchQuery.value && inputRef.current) {
-      inputRef.current.innerText = searchQuery.value;
+  createEffect(() => {
+    if (searchQuery() && inputRef) {
+      inputRef.innerText = searchQuery();
     }
   });
 
-  useSignalEffect(() => {
-    if (isFocused.value) {
-      element.classList.add("is-focused");
-    } else {
-      element.classList.remove("is-focused");
-    }
-  });
-
+  useSignalClass(element, "is-focused", isFocused);
   useSignalClass(element, "is-expanded", isMultiline);
   useSignalClass(document.body, "has-focus", isFocused);
+
+  onMount(() => {
+    inputRef.focus();
+  });
 
   return (
     <>
       <div
-        ref={inputRef}
+        ref={(el) => (inputRef = el)}
         role="textbox"
         contentEditable
-        autoFocus
-        className="search-input"
-        name="q"
-        type="text"
-        autoComplete="off"
-        onFocus={() => (isFocused.value = true)}
-        onBlur={() => (isFocused.value = false)}
+        class="search-input"
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         onKeyDown={handleKeyDown}
         onInput={handleInput}
       />
@@ -87,4 +81,4 @@ export function SearchForm({ element }: Props) {
       </button>
     </>
   );
-}
+});

@@ -1,22 +1,14 @@
-import {
-  computed,
-  effect,
-  signal,
-  useComputed,
-  useSignal,
-  useSignalEffect,
-} from "@preact/signals";
-import { headerText } from "../signals/headerText.tsx";
+import { setHeaderText } from "../signals/headerText.tsx";
 import { secondsToString } from "../functions/time.ts";
-import { useEffect } from "preact/compat";
 import { setPageTitle } from "../functions/dom.ts";
+import { createEffect, createSignal } from "solid-js";
 
 const header = document.querySelector(".header") as HTMLElement;
 
 // Retrieve timer from localStorage
 const storageKey = "timer";
 const storageItem = localStorage.getItem(storageKey);
-const timerInfo = signal<
+const [timerInfo, setTimerInfoSignal] = createSignal<
   { start: number } | { end: number; duration: number } | null
 >(storageItem ? JSON.parse(storageItem) : null);
 
@@ -24,12 +16,12 @@ const setTimerInfo = (
   info: { start: number } | { end: number; duration: number },
 ) => {
   localStorage.setItem(storageKey, JSON.stringify(info));
-  timerInfo.value = info;
+  setTimerInfoSignal(info);
 };
 
 const clearTimerInfo = () => {
   localStorage.removeItem(storageKey);
-  timerInfo.value = null;
+  setTimerInfoSignal(null);
 };
 
 export function timer(q: string): boolean {
@@ -48,40 +40,31 @@ export function timer(q: string): boolean {
   return false;
 }
 
-effect(() => {
-  headerText.value = timerInfo.value ? <TimerComponent /> : null;
-  if (headerText.value) {
-    header.classList.add("has-timer");
-  } else {
-    header.classList.remove("has-timer");
-  }
-});
-
 // Get the number of seconds elapsed / left
 const getTimerSeconds = (): number => {
-  if (!timerInfo.value) {
+  const timer = timerInfo();
+  if (!timer) {
     return 0;
   }
-  if ("start" in timerInfo.value) {
-    return Math.round((Date.now() - timerInfo.value.start) / 1000);
+  if ("start" in timer) {
+    return Math.round((Date.now() - timer.start) / 1000);
   }
-  return Math.max(0, Math.round((timerInfo.value.end - Date.now()) / 1000));
+  return Math.max(0, Math.round((timer.end - Date.now()) / 1000));
 };
 
-const isDecrementTimer = computed(
-  () => timerInfo.value && "end" in timerInfo.value,
-);
+const isDecrementTimer = () => timerInfo() && "end" in timerInfo()!;
 
-function TimerComponent() {
-  const seconds = useSignal(getTimerSeconds());
+const TimerComponent = () => {
+  const [seconds, setSeconds] = createSignal(getTimerSeconds());
 
-  const durationText = useComputed(() => secondsToString(seconds.value));
+  const durationText = () => secondsToString(seconds());
 
-  useEffect(() => {
+  createEffect(() => {
     const originalTitle = document.title;
     const timer = setInterval(() => {
-      seconds.value = Math.max(getTimerSeconds(), 0);
-      if (seconds.value === 0 && isDecrementTimer.value) {
+      const newSeconds = Math.max(getTimerSeconds(), 0);
+      setSeconds(newSeconds);
+      if (newSeconds === 0 && isDecrementTimer()) {
         clearInterval(timer);
       }
     }, 1000);
@@ -91,18 +74,29 @@ function TimerComponent() {
     };
   }, []);
 
-  useSignalEffect(() => {
-    if (timerInfo.value && "duration" in timerInfo.value) {
+  createEffect(() => {
+    const timer = timerInfo();
+    if (timer && "duration" in timer!) {
       header.style.setProperty(
         "--progress",
-        ((seconds.value * 1000) / timerInfo.value.duration).toFixed(4),
+        ((seconds() * 1000) / timer.duration).toFixed(4),
       );
     }
   });
 
-  useSignalEffect(() => {
-    setPageTitle(durationText.value);
+  createEffect(() => {
+    setPageTitle(durationText());
   });
 
-  return <div onClick={clearTimerInfo}>{durationText}</div>;
-}
+  return <div onClick={clearTimerInfo}>{durationText()}</div>;
+};
+
+createEffect(() => {
+  const timer = timerInfo();
+  setHeaderText(() => (timer ? TimerComponent : ""));
+  if (timer) {
+    header.classList.add("has-timer");
+  } else {
+    header.classList.remove("has-timer");
+  }
+});

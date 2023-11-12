@@ -1,13 +1,16 @@
-import { type Signal } from "@preact/signals";
+import type { Accessor } from "solid-js";
+import { createEffect } from "solid-js";
 
 export function useSignalClass(
   element: HTMLElement,
   className: string,
-  signal: Signal<boolean>,
+  signal: Accessor<boolean>,
 ) {
-  if (signal.value) {
-    element.classList.add(className);
-  } else {
-    element.classList.remove(className);
-  }
+  createEffect(() => {
+    if (signal()) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
+  });
 }

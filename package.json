@@ -10,21 +10,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/plugin-transform-react-jsx": "^7.22.15",
-    "@preact/preset-vite": "^2.5.0",
     "@types/dom-view-transitions": "^1.0.3",
-    "@types/preact-custom-element": "^4.0.3",
     "prettier": "^3.0.3",
     "sass": "^1.69.5",
     "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "vite": "^4.5.0",
+    "vite-plugin-solid": "^2.7.2"
   },
   "dependencies": {
-    "@preact/signals": "^1.2.1",
     "@types/node": "^20.8.10",
-    "clsx": "^2.0.0",
-    "preact": "^10.18.1",
-    "preact-custom-element": "^4.3.0"
+    "solid-element": "^1.8.0",
+    "solid-js": "^1.8.5"
   }
 }

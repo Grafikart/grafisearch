@@ -1,9 +1,22 @@
-import { signal } from "@preact/signals";
-import { render, type ComponentChild } from "preact";
+import { createEffect, createSignal, type JSX, Match, Switch } from "solid-js";
+import { Dynamic, render } from "solid-js/web";
 
-export const headerText = signal<ComponentChild>(null);
+const [headerText, setHeader] = createSignal<string | (() => JSX.Element)>("");
+
+export const setHeaderText = setHeader;
 
 render(
-  <>{headerText}</>,
+  () => {
+    createEffect(() => {
+      console.log("headerText", headerText());
+    });
+    return (
+      <Switch fallback={headerText() as string}>
+        <Match when={typeof headerText() === "function"}>
+          <Dynamic component={headerText()} />
+        </Match>
+      </Switch>
+    );
+  },
   document.querySelector(".header-text") as HTMLDivElement,
 );

@@ -1,4 +1,3 @@
-import type { JSX } from "preact/jsx-runtime";
 import { searchQuery } from "../signals/search";
 
 type Props = {
@@ -8,11 +7,11 @@ type Props = {
 };
 
 export function LogButton({ url, found }: Props) {
-  const handleClick: JSX.MouseEventHandler<HTMLAnchorElement> = () => {
+  const handleClick = () => {
     navigator.sendBeacon(
       "/api/log",
       JSON.stringify({
-        q: searchQuery.peek(),
+        q: searchQuery(),
         found: found,
         googleFound:
           !found &&
