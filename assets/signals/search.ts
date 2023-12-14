@@ -4,6 +4,7 @@ import { calculator } from "../middlewares/calculator.js";
 import { timer } from "../middlewares/timer";
 import { uppercase } from "../middlewares/uppercase.js";
 import { setPageTitle, withViewTransition } from "../functions/dom.ts";
+import { headerText } from "./headerText.tsx";
 
 /**
  * Check if the query match one of the middleware (short circuit the search)
@@ -59,11 +60,11 @@ export const pushSearch = (q: string) => {
 };
 
 effect(() => {
-  setPageTitle(searchQuery.value)
+  setPageTitle(searchQuery.value);
 });
 
 effect(() => {
-  if (searchableQuery.value) {
+  if (searchableQuery.value || headerText.value) {
     withViewTransition(() => document.body.classList.add("has-results"));
   } else {
     withViewTransition(() => document.body.classList.remove("has-results"));

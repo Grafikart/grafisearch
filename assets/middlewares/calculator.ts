@@ -10,7 +10,7 @@ export function calculator(q: string): boolean {
     hasCalculation = true;
     return true;
   } else if (hasCalculation) {
-    headerText.value = "";
+    headerText.value = null;
     hasCalculation = false;
   }
   return false;

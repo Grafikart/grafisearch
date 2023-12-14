@@ -50,7 +50,7 @@ export function timer(q: string): boolean {
 
 effect(() => {
   headerText.value = timerInfo.value ? <TimerComponent /> : null;
-  if (headerText.value) {
+  if (headerText.peek()) {
     header.classList.add("has-timer");
   } else {
     header.classList.remove("has-timer");
