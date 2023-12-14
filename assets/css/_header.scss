@@ -58,11 +58,13 @@
     display: flex;
     overflow: hidden;
     transition: border .3s, box-shadow .3s;
+    opacity: .85;
 }
 
 .has-results .search-form {
     align-self: flex-start;
     margin-top: 20px;
+    opacity: 1;
 }
 
 .has-focus .search-form {
