@@ -1,4 +1,8 @@
 export function bangs (q: string): boolean {
+    if (q.startsWith("http")) {
+        window.location.href = q
+        return true
+    }
     if (!q.includes('!') || !window.BANGS) {
         return false;
     }

@@ -44,6 +44,9 @@ func parseRedirectBangs(q string) string {
 	if q == "" {
 		return ""
 	}
+  if strings.HasPrefix(q, "http") {
+    return q
+  }
 	for bang, redirect := range redirectBangs {
 		if strings.HasPrefix(q, bang+" ") ||
 			strings.HasSuffix(q, " "+bang) {
