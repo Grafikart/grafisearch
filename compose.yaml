@@ -1,0 +1,8 @@
+services:
+  server:
+    restart: unless-stopped
+    build:
+      context: .
+      target: final
+    ports:
+      - 80:8042
