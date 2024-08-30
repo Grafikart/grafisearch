@@ -1,0 +1,16 @@
+package templates;
+
+import "fmt"
+
+templ SearchPage(wallpaper string) {
+	@Layout("GrafiSearch") {
+		@templ.Raw(fmt.Sprintf(`
+		<style>
+			body {
+				background-image: url(%s);
+			}
+		</style>
+		`, wallpaper))
+		<div id="search"/>
+	}
+}

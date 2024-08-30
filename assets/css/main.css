@@ -1,0 +1,43 @@
+@import "reset.css";
+@import "search.css";
+
+:root {
+    --color: #a9b1d6;
+    --colorLight: #a9b1d63d;
+    --background: #0d0e16;
+    --backgroundLight: #191d2d;
+    --link: #9ece6a;
+    --title: #7aa2f7;
+    --border: #303246;
+    --backgroundHover: #12141f;
+}
+
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--color);
+    font-size: 14px/normal 'Roboto', Helvetica, Sans-Serif;
+    line-height: 1.4;
+    background: url(/images/red-forest.png) var(--background) center center / cover no-repeat fixed;
+}
+
+a {
+    text-decoration: none;
+    color: var(--title);
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:visited {
+    color: var(--visited)
+}
+
+p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+}
+

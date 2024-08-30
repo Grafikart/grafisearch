@@ -5,13 +5,3 @@ export function withViewTransition(transition: () => void) {
     transition();
   }
 }
-
-const baseTitle = document.title
-
-export function setPageTitle (name?: string | null): void {
-  if (name) {
-    document.title = `${name} - ${baseTitle}`
-    return
-  }
-  document.title = `${baseTitle}`
-}
