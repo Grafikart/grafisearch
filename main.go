@@ -27,18 +27,26 @@ func main() {
 
 	viteAssets := server.NewViteAssets(publicFS)
 	frontMiddleware := createFrontEndMiddleware(*viteAssets)
+	publicServer := http.FileServer(http.FS(publicFS))
 
 	// Static Assets
 	http.HandleFunc("/sse", server.SSEHandler)
 	http.HandleFunc("/assets/", viteAssets.ServeAssets)
-	http.Handle("/images/", http.FileServer(http.FS(publicFS)))
 
 	// API
 	http.HandleFunc("/api/ddg", api.SearchWithParser(search.GetDDGResults))
 	http.HandleFunc("/api/google", api.SearchWithParser(search.GetGoogleResults))
 
 	// HTML Pages
-	http.HandleFunc("/", frontMiddleware(server.SearchHandler))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Serve the root
+		if r.URL.Path == "/" {
+			frontMiddleware(server.SearchHandler)(w, r)
+			return
+		}
+		// Otherwise serve public files
+		publicServer.ServeHTTP(w, r)
+	})
 
 	fmt.Println("Server is running on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

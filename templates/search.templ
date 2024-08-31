@@ -2,7 +2,7 @@ package templates;
 
 import "fmt"
 
-templ SearchPage(wallpaper string) {
+templ SearchPage(wallpaper string, bangs map[string]string) {
 	@Layout("GrafiSearch") {
 		@templ.Raw(fmt.Sprintf(`
 		<style>
@@ -12,5 +12,6 @@ templ SearchPage(wallpaper string) {
 		</style>
 		`, wallpaper))
 		<div id="search"/>
+		@templ.JSONScript("bangs", bangs)
 	}
 }

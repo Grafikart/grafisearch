@@ -6,10 +6,11 @@ type Link struct {
 }
 
 type SearchResult struct {
-	URL     string `json:"url"`
-	Title   string `json:"title"`
-	Desc    string `json:"desc"`
-	Domain  string `json:"domain"`
-	Author  string `json:"author,omitempty"`
-	Related []Link `json:"related,omitempty"`
+	URL      string `json:"url"`
+	Title    string `json:"title"`
+	Desc     string `json:"desc"`
+	Domain   string `json:"domain"`
+	SiteName string `json:"siteName,omitempty"`
+	Author   string `json:"author,omitempty"`
+	Related  []Link `json:"related,omitempty"`
 }

@@ -6,17 +6,18 @@ import (
 	"net/http"
 
 	"grafikart/grafisearch/search"
+	"grafikart/grafisearch/server"
 )
 
 func SearchWithParser(fn func(string) ([]search.SearchResult, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		query := r.URL.Query().Get("q")
+		q := r.URL.Query().Get("q")
 
-		if query == "" {
+		if q == "" {
 			serveError(w, errors.New("missing query parameter"))
 			return
 		}
-		results, err := fn(query)
+		results, err := fn(server.ReplaceFilterBangs(q))
 		if err != nil {
 			serveError(w, err)
 			return

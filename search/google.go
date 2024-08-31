@@ -33,6 +33,7 @@ func GetGoogleResults(q string) ([]SearchResult, error) {
 		desc := item.Find(".VwiC3b")
 		link := strings.TrimSpace(a.AttrOr("href", ""))
 		cite := item.Find("cite")
+		siteName := item.Find(".VuuXrf")
 
 		if link != "" && link != "#" && !strings.HasPrefix(link, "/") {
 			u, err := url.Parse(link)
@@ -40,12 +41,13 @@ func GetGoogleResults(q string) ([]SearchResult, error) {
 			if err == nil && !isBlockedSite(u.Host) && !linkAlreadyListed {
 				urls[link] = 1
 				result := SearchResult{
-					URL:     link,
-					Title:   utils.StringOrEmpty(title.Html()),
-					Desc:    utils.StringOrEmpty(desc.Html()),
-					Domain:  u.Host,
-					Author:  cite.First().Text(),
-					Related: extractRelated(item.Find(".fl")),
+					URL:      link,
+					Title:    utils.StringOrEmpty(title.Html()),
+					Desc:     utils.StringOrEmpty(desc.Html()),
+					Domain:   u.Host,
+					Author:   cite.First().Text(),
+					Related:  extractRelated(item.Find(".fl")),
+					SiteName: utils.StringOrEmpty(siteName.Html()),
 				}
 				results = append(results, result)
 
@@ -67,12 +69,14 @@ func GetGoogleResults(q string) ([]SearchResult, error) {
 			cite := anchor.Find("cite").Parent()
 			title := item.Find("[role=\"heading\"]").Find("div").First().Text()
 			description := item.Find("span[aria-hidden=\"true\"]").First().Text()
+			siteName := item.Find(".Sg4azc cite")
 			videos = append(videos, SearchResult{
-				URL:    href,
-				Title:  title,
-				Desc:   description,
-				Domain: "youtube.com",
-				Author: cite.First().Text(),
+				URL:      href,
+				Title:    title,
+				Desc:     description,
+				Domain:   "youtube.com",
+				Author:   cite.First().Text(),
+				SiteName: utils.StringOrEmpty(siteName.Html()),
 			})
 		}
 		max := int(math.Min(float64(len(videos)-1), 3))

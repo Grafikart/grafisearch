@@ -1,11 +1,11 @@
-import { useComputed, useSignal, useSignalEffect } from "@preact/signals";
-import { useLocation } from "preact-iso";
-import type { JSX } from "preact/jsx-runtime";
-import { useEffect, useRef, useState } from "preact/hooks";
-import { jsonFetch } from "../functions/http.ts";
-import { youtubeThumbnail } from "../functions/youtube.ts";
+import {useComputed, useSignal} from "@preact/signals";
+import {useLocation} from "preact-iso";
+import type {JSX} from "preact/jsx-runtime";
+import {useEffect, useMemo, useRef} from "preact/hooks";
+import {jsonFetch} from "../functions/http.ts";
+import {youtubeThumbnail} from "../functions/youtube.ts";
 import clsx from "clsx";
-import { withViewTransition } from "../functions/dom.ts";
+import {withViewTransition} from "../functions/dom.ts";
 
 type SearchResultLink = {
   title: string;
@@ -19,11 +19,17 @@ type SearchResult = {
   domain: string;
   author?: string;
   related?: SearchResultLink[];
+  siteName?: string;
 };
 
 export function Search() {
   const location = useLocation();
   const columns = useSignal<SearchResult[][]>([]);
+  const bangs = useMemo(() => {
+    return JSON.parse(document.getElementById("bangs")!.textContent!);
+  }, []);
+
+  console.log(bangs);
 
   const onSearch = (q: string) => {
     const url = new URL(window.location.pathname, window.location.origin);
@@ -61,9 +67,9 @@ export function Search() {
     return () => abortController.abort();
   }, [query]);
 
-  useSignalEffect(() => {
-    console.log(columns.value);
-  });
+  useEffect(() => {
+    document.title = query ? `${query} - GrafiSearch` : "GrafiSearch";
+  }, [query]);
 
   return (
     <>
@@ -197,21 +203,23 @@ function SearchResult({ result }: { result: SearchResult }) {
   const hasRelated = result.related && result.related.length > 0;
 
   return (
-    <div class={clsx("search-result", isYoutubeURL && "search-result--img")}>
-      {thumbnail && (
-        <img className="search-result__img" src={thumbnail} alt="" />
-      )}
-      <div>
+    <article class={clsx("search-result", isYoutubeURL && "search-result--img")}>
+      <div className="search-result__header">
+        <div className="search-result__favicon">
+          <img src={favicon} alt=""/>
+        </div>
+          <div class="search-result__name">{result.siteName}</div>
+          <div class="search-result__url">{source}</div>
+      </div>
         <a
           class="search-result__title"
           rel="noopener noreferrer"
           href={result.url}
           dangerouslySetInnerHTML={{ __html: result.title }}
         />
-        <div class="search-result__url">
-          <img src={favicon} alt="" />
-          <span>{source}</span>
-        </div>
+      {thumbnail && (
+        <img className="search-result__img" src={thumbnail} alt="" />
+      )}
         <p
           class="search-result__desc"
           dangerouslySetInnerHTML={{ __html: description }}
@@ -225,7 +233,6 @@ function SearchResult({ result }: { result: SearchResult }) {
             ))}
           </div>
         )}
-      </div>
-    </div>
+    </article>
   );
 }
