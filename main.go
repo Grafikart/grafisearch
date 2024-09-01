@@ -7,7 +7,6 @@ import (
 	"grafikart/grafisearch/search"
 	"grafikart/grafisearch/server"
 	"grafikart/grafisearch/server/api"
-	"grafikart/grafisearch/utils"
 	"io/fs"
 	"log"
 	"net/http"
@@ -15,7 +14,8 @@ import (
 
 //go:embed public/*
 var assets embed.FS
-var wallpaper string = "/images/red-forest.png"
+
+const port = ":8080"
 
 func main() {
 	publicFS, err := fs.Sub(assets, "public")
@@ -23,7 +23,7 @@ func main() {
 		panic(fmt.Sprintf("Cannot sub public directory %v", err))
 	}
 
-	go utils.FetchBingWallpaper()
+	// go utils.FetchBingWallpaper()
 
 	viteAssets := server.NewViteAssets(publicFS)
 	frontMiddleware := createFrontEndMiddleware(*viteAssets)
@@ -37,7 +37,8 @@ func main() {
 	http.HandleFunc("/api/ddg", api.SearchWithParser(search.GetDDGResults))
 	http.HandleFunc("/api/google", api.SearchWithParser(search.GetGoogleResults))
 
-	// HTML Pages
+	// FrontEnd URLs
+	http.HandleFunc("/weather", server.WeatherHandler)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Serve the root
 		if r.URL.Path == "/" {
@@ -48,8 +49,8 @@ func main() {
 		publicServer.ServeHTTP(w, r)
 	})
 
-	fmt.Println("Server is running on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	fmt.Printf("Server is running on http://localhost%s\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
 
 // Inject assets tags (as a string) in the context

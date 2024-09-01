@@ -31,7 +31,7 @@ func GetGoogleResults(q string) ([]SearchResult, error) {
 		a := item.Find("a")
 		title := item.Find("h3").First()
 		desc := item.Find(".VwiC3b")
-		link := strings.TrimSpace(a.AttrOr("href", ""))
+		link := utils.UrlUnescape(a.AttrOr("href", ""))
 		cite := item.Find("cite")
 		siteName := item.Find(".VuuXrf")
 
@@ -65,10 +65,10 @@ func GetGoogleResults(q string) ([]SearchResult, error) {
 		for i := range sel.Nodes {
 			item := sel.Eq(i)
 			anchor := item.Find("a")
-			href := anchor.AttrOr("href", "")
+			href := utils.UrlUnescape(anchor.AttrOr("href", ""))
 			cite := anchor.Find("cite").Parent()
 			title := item.Find("[role=\"heading\"]").Find("div").First().Text()
-			description := item.Find("span[aria-hidden=\"true\"]").First().Text()
+			description := item.Find(".zCaigb").First().Text()
 			siteName := item.Find(".Sg4azc cite")
 			videos = append(videos, SearchResult{
 				URL:      href,
@@ -93,7 +93,7 @@ func extractRelated(s *goquery.Selection) []Link {
 		item := s.Eq(i)
 		span := item.Find("span")
 		title := span.Text()
-		href := item.AttrOr("href", "")
+		href := utils.UrlUnescape(item.AttrOr("href", ""))
 		if !strings.Contains(href, "webcache.googleusercontent") &&
 			!strings.Contains(href, "translate.google.com") &&
 			!strings.HasPrefix(href, "/search?q") {
@@ -110,15 +110,18 @@ func extractSameSite(s *goquery.Selection, r *[]SearchResult) {
 		item := items.Eq(i)
 		title := item.Find("h3")
 		a := title.Find("a")
-		href := a.AttrOr("href", "")
+		href := utils.UrlUnescape(a.AttrOr("href", ""))
 		u, _ := url.Parse(href)
 		desc := title.Next()
-		*r = append(*r, SearchResult{
-			URL:    href,
-			Title:  a.Text(),
-			Desc:   strings.Trim(utils.StringOrEmpty(desc.Html()), "<br/>"),
-			Domain: u.Host,
-		})
+		// Similar section now contains a search input, ignore it if it does'nt have a link
+		if href != "" {
+			*r = append(*r, SearchResult{
+				URL:    href,
+				Title:  a.Text(),
+				Desc:   strings.Trim(utils.StringOrEmpty(desc.Html()), "<br/>"),
+				Domain: u.Host,
+			})
+		}
 	}
 }
 
@@ -129,7 +132,7 @@ func extractNestedLi(s *goquery.Selection, r *[]SearchResult) {
 		item := items.Eq(i)
 		title := item.Find("h3")
 		a := title.Parent()
-		href := a.AttrOr("href", "")
+		href := utils.UrlUnescape(a.AttrOr("href", ""))
 		u, _ := url.Parse(href)
 		desc := item.Find("div[data-content-feature]")
 		*r = append(*r, SearchResult{

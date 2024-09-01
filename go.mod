@@ -8,4 +8,5 @@ require (
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/beevik/etree v1.4.1 // indirect
 	golang.org/x/net v0.28.0 // indirect
+	golang.org/x/text v0.17.0 // indirect
 )

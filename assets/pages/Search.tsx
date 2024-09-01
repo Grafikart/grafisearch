@@ -1,35 +1,18 @@
-import {useComputed, useSignal} from "@preact/signals";
-import {useLocation} from "preact-iso";
-import type {JSX} from "preact/jsx-runtime";
-import {useEffect, useMemo, useRef} from "preact/hooks";
-import {jsonFetch} from "../functions/http.ts";
-import {youtubeThumbnail} from "../functions/youtube.ts";
+import { Signal, useComputed, useSignal } from "@preact/signals";
+import { useLocation } from "preact-iso";
+import type { JSX } from "preact/jsx-runtime";
+import { useEffect, useRef } from "preact/hooks";
+import { youtubeThumbnail } from "../functions/youtube.ts";
 import clsx from "clsx";
-import {withViewTransition} from "../functions/dom.ts";
-
-type SearchResultLink = {
-  title: string;
-  url: string;
-};
-
-type SearchResult = {
-  url: string;
-  title: string;
-  desc: string;
-  domain: string;
-  author?: string;
-  related?: SearchResultLink[];
-  siteName?: string;
-};
+import { withViewTransition } from "../functions/dom.ts";
+import { SearchIcon } from "../components/icons.tsx";
+import { SearchResult, useSearchResults } from "../hooks/useSearchResults.tsx";
+import { Timer } from "../components/Timer.tsx";
+import { domainName } from "../functions/string.ts";
 
 export function Search() {
   const location = useLocation();
-  const columns = useSignal<SearchResult[][]>([]);
-  const bangs = useMemo(() => {
-    return JSON.parse(document.getElementById("bangs")!.textContent!);
-  }, []);
-
-  console.log(bangs);
+  const { columns, query, isFetching, component } = useSearchResults(location);
 
   const onSearch = (q: string) => {
     const url = new URL(window.location.pathname, window.location.origin);
@@ -37,50 +20,22 @@ export function Search() {
     withViewTransition(() => location.route(url.toString()));
   };
 
-  const query = location.query.q;
-  const pushColumn = (column: SearchResult[]) => {
-    columns.value = [...columns.value, column];
-  };
-
-  useEffect(() => {
-    if (!query) {
-      withViewTransition(() => {
-        columns.value = [];
-        document.body.classList.remove("has-results");
-      });
-      return;
-    }
-
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
-    jsonFetch<SearchResult[]>("/api/ddg", { query: { q: query }, signal }).then(
-      pushColumn
-    );
-    jsonFetch<SearchResult[]>("/api/google", {
-      query: { q: query },
-      signal,
-    }).then(pushColumn);
-
-    document.body.classList.add("has-results");
-
-    return () => abortController.abort();
-  }, [query]);
-
-  useEffect(() => {
-    document.title = query ? `${query} - GrafiSearch` : "GrafiSearch";
-  }, [query]);
-
   return (
     <>
       <header class="search-top">
-        <SearchForm onSearch={onSearch} defaultValue={query} />
+        <SearchForm
+          onSearch={onSearch}
+          defaultValue={query}
+          isLoading={isFetching}
+        />
+        {component.value}
+        <Timer />
       </header>
       <main class="search-main">
         {columns.value.map((column, index) => (
           <div class="search-column" key={index}>
             {column.map((result, k) => (
-              <SearchResult result={result} key={k} />
+              <SearchItem result={result} key={k} />
             ))}
           </div>
         ))}
@@ -92,9 +47,10 @@ export function Search() {
 type Props = {
   onSearch: (query: string) => void;
   defaultValue?: string;
+  isLoading: Signal<boolean>;
 };
 
-function SearchForm({ onSearch, defaultValue }: Props) {
+function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
   const isFocused = useSignal(false);
   const isMultiline = useSignal(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -116,16 +72,22 @@ function SearchForm({ onSearch, defaultValue }: Props) {
     clsx(
       "search-form",
       isFocused.value && "is-focused",
-      isMultiline.value && "is-multiline"
-    )
+      isMultiline.value && "is-multiline",
+      isLoading.value && "is-loading",
+    ),
   );
 
+  // Submit on enter (since we use a contenteditable element, we need to handle it manually)
   const handleKeyDown: JSX.KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       onSubmit(e);
     }
+    if (e.shiftKey) {
+      console.log("shift");
+    }
   };
 
+  // Detect multiline input to add a new class on the form
   const handleInput: JSX.GenericEventHandler<HTMLDivElement> = (e) => {
     isMultiline.value = e.currentTarget.innerText.includes("\n");
   };
@@ -152,35 +114,16 @@ function SearchForm({ onSearch, defaultValue }: Props) {
         onInput={handleInput}
       />
       <button type="submit">
-        <svg width="30" height="24" viewBox="0 0 25 25">
-          <path
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            fill="none"
-            d="M23.75 23.75l-9-9"
-          ></path>
-          <circle
-            stroke="currentColor"
-            stroke-width="2.5"
-            stroke-linecap="round"
-            stroke-miterlimit="10"
-            cx="9"
-            cy="9"
-            r="7.75"
-            fill="none"
-          />
-          <path fill="none" d="M25 25h-25v-25h25z"></path>
-        </svg>
+        <SearchIcon />
       </button>
     </form>
   );
 }
 
-function SearchResult({ result }: { result: SearchResult }) {
+function SearchItem({ result }: { result: SearchResult }) {
   const favicon = `https://external-content.duckduckgo.com/ip3/${result.domain}.ico`;
   const isYoutubeURL = result.url.startsWith("https://www.youtube.com/watch");
+  const siteName = result.siteName ?? domainName(result.url);
   let description = result.desc;
   let thumbnail: string | null = null;
   let source = result.url
@@ -192,47 +135,46 @@ function SearchResult({ result }: { result: SearchResult }) {
     source = result.author
       ? result.author.replace("YouTube · ", "")
       : "YouTube";
-    const [, durationInWords] = result.desc.split(". ");
     thumbnail = youtubeThumbnail(result.url);
-    description = durationInWords
-      ?.replaceAll(" minutes", "min")
-      .replaceAll(" et ", "")
-      .replaceAll("secondes", "");
   }
 
   const hasRelated = result.related && result.related.length > 0;
 
   return (
-    <article class={clsx("search-result", isYoutubeURL && "search-result--img")}>
-      <div className="search-result__header">
-        <div className="search-result__favicon">
-          <img src={favicon} alt=""/>
-        </div>
-          <div class="search-result__name">{result.siteName}</div>
-          <div class="search-result__url">{source}</div>
-      </div>
-        <a
-          class="search-result__title"
-          rel="noopener noreferrer"
-          href={result.url}
-          dangerouslySetInnerHTML={{ __html: result.title }}
-        />
+    <article
+      class={clsx("search-result", isYoutubeURL && "search-result--img")}
+    >
       {thumbnail && (
         <img className="search-result__img" src={thumbnail} alt="" />
       )}
-        <p
-          class="search-result__desc"
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
-        {hasRelated && (
-          <div class="search-result__related">
-            {result.related!.map((link) => (
-              <a rel="noopener noreferrer" href={link.url}>
-                {link.title}
-              </a>
-            ))}
-          </div>
-        )}
+      <div className="search-result__header">
+        <div className="search-result__favicon">
+          <img src={favicon} alt="" />
+        </div>
+        <div
+          class="search-result__name"
+        >{siteName}</div>
+        <div class="search-result__url">{source}</div>
+      </div>
+      <a
+        class="search-result__title"
+        rel="noopener noreferrer"
+        href={result.url}
+        dangerouslySetInnerHTML={{ __html: result.title }}
+      />
+      <p
+        class="search-result__desc"
+        dangerouslySetInnerHTML={{ __html: description }}
+      />
+      {hasRelated && (
+        <div class="search-result__related">
+          {result.related!.map((link) => (
+            <a rel="noopener noreferrer" href={link.url}>
+              {link.title}
+            </a>
+          ))}
+        </div>
+      )}
     </article>
   );
 }

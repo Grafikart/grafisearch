@@ -29,7 +29,7 @@ func GetDDGResults(q string) ([]SearchResult, error) {
 	for i := range sel.Nodes {
 		item := sel.Eq(i)
 		title := item.Find(".result__title").Find("a")
-		link := title.AttrOr("href", "")
+		link := utils.UrlUnescape(title.AttrOr("href", ""))
 		desc, _ := item.Find(".result__snippet").Html()
 		u, err := url.Parse(link)
 		if err == nil &&
