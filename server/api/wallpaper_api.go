@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"errors"
 	"grafikart/grafisearch/utils"
 	"net/http"
 )
@@ -12,17 +11,12 @@ type wallpaperResponse struct {
 }
 
 func WallpaperHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		serveError(w, errors.New("method not allowed"))
-		return
-	}
-
-	wallpaper, err := utils.ToggleWallpaper()
+	wallpaper, err := utils.FetchBingWallpaper()
 	if err != nil {
 		serveError(w, err)
 		return
 	}
-
+	w.Header().Set("Cache-Control", "public, max-age=3600")
 	j, _ := json.Marshal(wallpaperResponse{Wallpaper: wallpaper})
 	w.Write(j)
 }

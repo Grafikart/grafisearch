@@ -1,10 +1,8 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"grafikart/grafisearch/templates"
-	"grafikart/grafisearch/utils"
 	"net/http"
 	"net/url"
 	"strings"
@@ -34,10 +32,7 @@ var redirectBangs = map[string]string{
 	"!ia":   "https://www.bing.com/search?showconv=1&sendquery=1&q=%s",
 }
 
-var bangsStr, _ = json.Marshal(redirectBangs)
-
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
 	q := r.URL.Query().Get("q")
 	redirect := parseRedirectBangs(q)
 	// Redirect if a bang is used
@@ -45,8 +40,9 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, redirect, http.StatusFound)
 		return
 	}
-
-	templates.SearchPage(utils.Wallpaper, redirectBangs).Render(r.Context(), w)
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	templates.SearchPage(redirectBangs).Render(r.Context(), w)
 }
 
 func ReplaceFilterBangs(q string) string {

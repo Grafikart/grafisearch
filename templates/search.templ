@@ -1,16 +1,7 @@
 package templates;
 
-import "fmt"
-
-templ SearchPage(wallpaper string, bangs map[string]string) {
+templ SearchPage(bangs map[string]string) {
 	@Layout("GrafiSearch") {
-		@templ.Raw(fmt.Sprintf(`
-		<style>
-			body {
-				background-image: url(%s);
-			}
-		</style>
-		`, wallpaper))
 		<div id="search"/>
 		@templ.JSONScript("bangs", bangs)
 	}

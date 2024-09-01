@@ -1,5 +1,6 @@
 templates/*.go
 templates/*.txt
+./grafisearch
 
 # Logs
 logs

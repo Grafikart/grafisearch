@@ -9,16 +9,12 @@ import (
 	"github.com/beevik/etree"
 )
 
-const BaseWallpaper = "/images/red-forest.png"
-
-var Wallpaper = BaseWallpaper
-
 const (
 	bingURL = `https://www.bing.com`
 	bingAPI = `https://www.bing.com/HPImageArchive.aspx?format=xml&idx=%d&n=1&mkt=%s`
 )
 
-func bingWallpaper() (string, error) {
+func FetchBingWallpaper() (string, error) {
 
 	client := &http.Client{
 		Timeout: 5 * time.Second,
@@ -52,36 +48,4 @@ func bingWallpaper() (string, error) {
 	imgElem := doc.SelectElement("images").SelectElement("image")
 
 	return fmt.Sprintf("%s%s_%s", bingURL, imgElem.SelectElement("urlBase").Text(), "1920x1080.jpg"), nil
-}
-
-// Fetch bing wallpaper and retry every 30 seconds if necessary
-func FetchBingWallpaper() {
-	retries := 0
-	for {
-		retries++
-		w, err := bingWallpaper()
-		if err == nil {
-			Wallpaper = w
-			return
-		} else if retries > 4 {
-			fmt.Println("Failed to fetch wallpaper", err)
-			return
-		}
-		time.Sleep(time.Second * 30)
-	}
-}
-
-// Toggle between bing and default wallpaper
-func ToggleWallpaper() (string, error) {
-	if Wallpaper == BaseWallpaper {
-		w, err := bingWallpaper()
-		if err != nil {
-			fmt.Println("Failed to fetch wallpaper", err)
-			return BaseWallpaper, err
-		}
-		Wallpaper = w
-	} else {
-		Wallpaper = BaseWallpaper
-	}
-	return Wallpaper, nil
 }

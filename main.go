@@ -40,8 +40,6 @@ func main() {
 		panic(fmt.Sprintf("Cannot sub public directory %v", err))
 	}
 
-	go utils.FetchBingWallpaper()
-
 	viteAssets := server.NewViteAssets(publicFS)
 	frontMiddleware := createFrontEndMiddleware(*viteAssets)
 	publicServer := http.FileServer(http.FS(publicFS))
