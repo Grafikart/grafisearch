@@ -1,5 +1,5 @@
 import "./css/main.css";
-import { LocationProvider, ErrorBoundary, Router, Route } from 'preact-iso';
+import { LocationProvider, ErrorBoundary, Router, Route } from "preact-iso";
 
 import { Search } from "./pages/Search.tsx";
 import { render } from "preact";
@@ -9,6 +9,7 @@ const App = () => (
     <LocationProvider>
       <Router>
         <Route path="/" component={Search} />
+        <Route path="/stats" component={Search} />
       </Router>
     </LocationProvider>
   </ErrorBoundary>

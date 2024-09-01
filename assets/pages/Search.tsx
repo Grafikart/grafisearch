@@ -82,9 +82,6 @@ function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
     if (e.key === "Enter" && !e.shiftKey) {
       onSubmit(e);
     }
-    if (e.shiftKey) {
-      console.log("shift");
-    }
   };
 
   // Detect multiline input to add a new class on the form
@@ -151,9 +148,7 @@ function SearchItem({ result }: { result: SearchResult }) {
         <div className="search-result__favicon">
           <img src={favicon} alt="" />
         </div>
-        <div
-          class="search-result__name"
-        >{siteName}</div>
+        <div class="search-result__name">{siteName}</div>
         <div class="search-result__url">{source}</div>
       </div>
       <a
