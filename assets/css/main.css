@@ -1,49 +1,50 @@
 @layer base, theme;
 
 @import "reset.css" layer(base);
+@import "btn.css" layer(theme);
 @import "search.css" layer(theme);
 
 @layer base {
-:root {
-  --color: #a9b1d6;
-  --colorLight: #a9b1d63d;
-  --background: #0d0e16;
-  --backgroundLight: #191d2d;
-  --visited: #bb9af7;
-  --link: #9ece6a;
-  --title: #7aa2f7;
-  --border: #303246;
-  --backgroundHover: #12141f;
-  --padding: 1rem;
-}
+  :root {
+    --color: #a9b1d6;
+    --colorLight: #a9b1d63d;
+    --background: #0d0e16;
+    --backgroundLight: #191d2d;
+    --visited: #bb9af7;
+    --link: #9ece6a;
+    --title: #7aa2f7;
+    --border: #303246;
+    --backgroundHover: #12141f;
+    --padding: 1rem;
+  }
 
-body {
-  margin: 0;
-  padding: 0;
-  color: var(--color);
-  font-size: 16px;
-  font-family: "Inter", Helvetica, sans-serif;
-  line-height: 1.4;
-  background: url(/images/red-forest.png) var(--background) center center /
-    cover no-repeat fixed;
-}
+  body {
+    margin: 0;
+    padding: 0;
+    color: var(--color);
+    font-size: 16px;
+    font-family: "Inter", Helvetica, sans-serif;
+    line-height: 1.4;
+    background: url(/images/red-forest.png) var(--background) center center /
+      cover no-repeat fixed;
+  }
 
-a {
-  text-decoration: none;
-  color: var(--title);
-}
+  a {
+    text-decoration: none;
+    color: var(--title);
+  }
 
-a:hover {
-  text-decoration: underline;
-}
+  a:hover {
+    text-decoration: underline;
+  }
 
-a:visited {
-  color: var(--visited);
-}
+  a:visited {
+    color: var(--visited);
+  }
 
-p {
-  margin: 0;
-  padding: 0;
-  line-height: 1.4;
-}
+  p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.4;
+  }
 }

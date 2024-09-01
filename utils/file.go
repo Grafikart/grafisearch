@@ -4,20 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"os"
+	"io/fs"
 )
 
 // Read and parse a JSON file
-func ParseJsonFile(f string, v any) error {
-	// Open the file
-	file, err := os.Open(f)
-	if err != nil {
-		return fmt.Errorf("Error opening the file: %v", err)
-	}
-	defer file.Close()
-
+func ParseJsonFile(f fs.File, v any) error {
 	// Read the file content
-	bytes, err := io.ReadAll(file)
+	bytes, err := io.ReadAll(f)
 	if err != nil {
 		return fmt.Errorf("Error reading vite manifest file: %v", err)
 	}

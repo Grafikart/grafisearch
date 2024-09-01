@@ -4,29 +4,42 @@ import (
 	"fmt"
 	"grafikart/grafisearch/utils"
 	"io/fs"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 )
+
+type viteManifestItem struct {
+	File    string   `json:"file"`
+	Name    string   `json:"name"`
+	Src     string   `json:"src"`
+	IsEntry bool     `json:"isEntry"`
+	CSS     []string `json:"css"`
+}
+
+type viteManifestData map[string]viteManifestItem
 
 type ViteAssets struct {
 	publicPath   string
 	assets       fs.FS
-	manifestPath string
 	hasManifest  bool
 	port         int16
+	manifestData viteManifestData
 }
 
-func NewViteAssets(assets fs.FS) *ViteAssets {
-	manifestPath := "public/assets/.vite/manifest.json"
-	_, err := os.Stat(manifestPath)
+func NewViteAssets(filesystem fs.FS) *ViteAssets {
+	var data viteManifestData
+	manifestPath := "assets/.vite/manifest.json"
+	f, err := filesystem.Open(manifestPath)
+	if err == nil {
+		defer f.Close()
+		err = utils.ParseJsonFile(f, &data)
+	}
 	return &ViteAssets{
 		publicPath:   "/assets/",
-		assets:       assets,
-		manifestPath: manifestPath,
+		assets:       filesystem,
 		hasManifest:  err == nil,
 		port:         3000,
+		manifestData: data,
 	}
 }
 
@@ -43,16 +56,6 @@ func (v ViteAssets) ServeAssets(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(301)
 }
 
-type manifestItem struct {
-	File    string   `json:"file"`
-	Name    string   `json:"name"`
-	Src     string   `json:"src"`
-	IsEntry bool     `json:"isEntry"`
-	CSS     []string `json:"css"`
-}
-
-type manifestData map[string]manifestItem
-
 func (v ViteAssets) GetHeadHTML() string {
 	var sb strings.Builder
 	if !v.hasManifest {
@@ -61,17 +64,10 @@ func (v ViteAssets) GetHeadHTML() string {
 		return sb.String()
 	}
 
-	var assets manifestData
-	err := utils.ParseJsonFile(v.manifestPath, &assets)
-
-	if err != nil {
-		log.Fatalf("Cannot parse vite manifest file: %v", err)
-	}
-
-	for _, item := range assets {
+	for _, item := range v.manifestData {
 		sb.WriteString(fmt.Sprintf("<script type=\"module\" src=\"%s%s\"></script>", v.publicPath, item.File))
 		for _, css := range item.CSS {
-			sb.WriteString(fmt.Sprintf("<link rel=\"strylesheet\" src=\"%s%s\">", v.publicPath, css))
+			sb.WriteString(fmt.Sprintf("<link rel=\"stylesheet\" href=\"%s%s\">", v.publicPath, css))
 		}
 	}
 

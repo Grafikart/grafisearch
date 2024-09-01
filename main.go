@@ -7,23 +7,40 @@ import (
 	"grafikart/grafisearch/search"
 	"grafikart/grafisearch/server"
 	"grafikart/grafisearch/server/api"
+	"grafikart/grafisearch/utils"
 	"io/fs"
 	"log"
 	"net/http"
+	"os"
 )
 
-//go:embed public/*
+//go:embed all:public
 var assets embed.FS
 
-const port = ":8080"
+//go:embed install/com.grafisearch.plist
+var macOSService string
+
+//go:embed install/grafisearch.service
+var linuxService string
+
+const port = ":8042"
 
 func main() {
+	// Handle "install" flag
+	if len(os.Args) >= 2 && os.Args[1] == "install" {
+		err := utils.InstallApp(linuxService, macOSService)
+		if err != nil {
+			panic(err)
+		}
+		return
+	}
+
 	publicFS, err := fs.Sub(assets, "public")
 	if err != nil {
 		panic(fmt.Sprintf("Cannot sub public directory %v", err))
 	}
 
-	// go utils.FetchBingWallpaper()
+	go utils.FetchBingWallpaper()
 
 	viteAssets := server.NewViteAssets(publicFS)
 	frontMiddleware := createFrontEndMiddleware(*viteAssets)
@@ -36,6 +53,7 @@ func main() {
 	// API
 	http.HandleFunc("/api/ddg", api.SearchWithParser(search.GetDDGResults))
 	http.HandleFunc("/api/google", api.SearchWithParser(search.GetGoogleResults))
+	http.HandleFunc("/api/wallpaper", api.WallpaperHandler)
 
 	// FrontEnd URLs
 	http.HandleFunc("/weather", server.WeatherHandler)

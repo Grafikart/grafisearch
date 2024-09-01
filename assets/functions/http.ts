@@ -9,5 +9,10 @@ export function jsonFetch<T>(
     Accept: "application/json",
     ...params.headers,
   };
-  return fetch(`${url}${query}`, params).then((r) => r.json());
+  return fetch(`${url}${query}`, params).then((r) => {
+    if (r.ok) {
+      return r.json();
+    }
+    throw new Error(`Cannot fetch ${url}: ${r.status} ${r.statusText}`);
+  });
 }

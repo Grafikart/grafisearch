@@ -9,7 +9,9 @@ import (
 	"github.com/beevik/etree"
 )
 
-var Wallpaper string = "images/red-forest.png"
+const BaseWallpaper = "/images/red-forest.png"
+
+var Wallpaper = BaseWallpaper
 
 const (
 	bingURL = `https://www.bing.com`
@@ -67,4 +69,19 @@ func FetchBingWallpaper() {
 		}
 		time.Sleep(time.Second * 30)
 	}
+}
+
+// Toggle between bing and default wallpaper
+func ToggleWallpaper() (string, error) {
+	if Wallpaper == BaseWallpaper {
+		w, err := bingWallpaper()
+		if err != nil {
+			fmt.Println("Failed to fetch wallpaper", err)
+			return BaseWallpaper, err
+		}
+		Wallpaper = w
+	} else {
+		Wallpaper = BaseWallpaper
+	}
+	return Wallpaper, nil
 }

@@ -46,8 +46,7 @@ func SearchHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	component := templates.SearchPage(utils.Wallpaper, redirectBangs)
-	component.Render(r.Context(), w)
+	templates.SearchPage(utils.Wallpaper, redirectBangs).Render(r.Context(), w)
 }
 
 func ReplaceFilterBangs(q string) string {
