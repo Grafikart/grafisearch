@@ -262,6 +262,16 @@ body.has-results {
   }
 }
 
+.search-result__related {
+  display: flex;
+  flex-direction: column;
+
+  a {
+    position: relative;
+    z-index: 3;
+  }
+}
+
 .search-result__related em {
   position: relative;
   z-index: 3;
