@@ -59,7 +59,7 @@ func parseRedirectBangs(q string) string {
 	if q == "" {
 		return ""
 	}
-	if strings.HasPrefix(q, "http") {
+	if strings.HasPrefix(q, "http://") || strings.HasPrefix(q, "https://") {
 		return q
 	}
 

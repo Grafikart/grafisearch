@@ -1,8 +1,8 @@
 let bangs: null | Record<string, string> = null;
 
 export function handleBangs(q: string): boolean {
-  if (q.startsWith("http")) {
-    window.location.href = q;
+  if (q.startsWith("http://") || q.startsWith("https://")) {
+    window.location.replace(q);
     return true;
   }
 

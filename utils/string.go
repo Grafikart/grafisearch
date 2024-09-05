@@ -2,6 +2,7 @@ package utils
 
 import (
 	"net/url"
+	"strings"
 )
 
 func StringOrEmpty(s string, err error) string {
@@ -17,4 +18,8 @@ func UrlUnescape(u string) string {
 		return u
 	}
 	return unescapedURL
+}
+
+func IsUrl(s string) bool {
+	return strings.HasPrefix(s, "http://") || strings.HasPrefix(s, "https://")
 }

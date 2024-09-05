@@ -12,5 +12,6 @@ install: grafisearch ## Install the executable and register the service
 
 grafisearch:
 	bun run build
+	templ generate
 	go build
 	rm -rf public/assets
