@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"grafikart/grafisearch/templates"
+	"grafikart/grafisearch/utils"
 	"net/http"
 	"net/url"
 	"strings"
@@ -34,9 +35,9 @@ var redirectBangs = map[string]string{
 
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
-	redirect := parseRedirectBangs(q)
-	// Redirect if a bang is used
-	if redirect != "" {
+
+	// Redirect if a bang is used or if the query is an URL
+	if redirect := parseRedirectBangs(q); redirect != "" {
 		http.Redirect(w, r, redirect, http.StatusFound)
 		return
 	}
@@ -59,22 +60,22 @@ func parseRedirectBangs(q string) string {
 	if q == "" {
 		return ""
 	}
-	if strings.HasPrefix(q, "http://") || strings.HasPrefix(q, "https://") {
+	// Query is in fact an URL
+	if utils.IsUrl(q) {
 		return q
 	}
 
-	for bang, redirect := range redirectBangs {
-		// Check if the bang is in the string
-		if strings.Contains(q, bang) {
-			return fmt.Sprintf(
-				redirect,
-				url.QueryEscape(
-					strings.TrimSpace(
-						strings.ReplaceAll(q, bang, ""),
-					),
+	// The query contains a redirect bang
+	bang := utils.ExtractBang(q)
+	for redirectUrl, ok := redirectBangs[bang]; ok && strings.Contains(q, bang); {
+		return fmt.Sprintf(
+			redirectUrl,
+			url.QueryEscape(
+				strings.TrimSpace(
+					strings.ReplaceAll(q, bang, ""),
 				),
-			)
-		}
+			),
+		)
 	}
 	return ""
 }

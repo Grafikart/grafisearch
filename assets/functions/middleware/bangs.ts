@@ -1,30 +1,37 @@
 let bangs: null | Record<string, string> = null;
 
+/**
+ * Handle bangs and redirection
+ */
 export function handleBangs(q: string): boolean {
+  // The query is an URL
   if (q.startsWith("http://") || q.startsWith("https://")) {
     window.location.replace(q);
     return true;
   }
 
+  // Load the bangs list from the page content
   if (!bangs) {
     bangs = JSON.parse(document.getElementById("bangs")!.textContent!);
   }
 
-  if (!q.includes("!")) {
+  // Extract a possible bang from the query
+  const matches = q.match(/![a-z]+/);
+  if (!matches) {
     return false;
   }
-  for (let bang of Object.keys(bangs!)) {
-    if (q.includes(bang)) {
-      const search = q.replace(bang, "").trim();
-      const url = bangs![bang];
-      if (url) {
-        window.location.href = url.replace(
-          "%s",
-          encodeURIComponent(search.replaceAll(bang, "").trim()),
-        );
-        return true;
-      }
-    }
+
+  const bang = matches[0];
+  const redirectionURL = bangs![bang];
+  if (!redirectionURL) {
+    return false;
   }
-  return false;
+
+  window.location.replace(
+    redirectionURL.replace(
+      "%s",
+      encodeURIComponent(q.replaceAll(bang, "").trim()),
+    ),
+  );
+  return true;
 }
