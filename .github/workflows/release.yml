@@ -19,29 +19,22 @@ jobs:
           fetch-depth: 0
       - name: Fetch all tags
         run: git fetch --force --tags
-      - name: Cache pnpm modules
-        uses: actions/cache@v2
+      - uses: oven-sh/setup-bun@v2
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.0.1
-        with:
-          version: 7.17.1
-          run_install: true
-      - name: Build the library
-        run: pnpm run build
+          bun-version: latest
+      - name: Install Dependencies
+        run: bun install
+      - name: Build assets
+        run: bun run build
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.21
-      -
-        name: Run GoReleaser
+          go-version: 1.23
+      - name: Install templ
+        run: go install github.com/a-h/templ/cmd/templ@latest
+      - name: Generate templates
+        run: templ generate
+      - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v5
         with:
           distribution: goreleaser
