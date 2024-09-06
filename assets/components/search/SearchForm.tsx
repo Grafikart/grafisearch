@@ -71,7 +71,7 @@ export function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
         onKeyDown={handleKeyDown}
         onInput={handleInput}
       />
-      <button type="submit" className={btnClassName}>
+      <button type="submit" className={btnClassName} tabIndex={-1}>
         <SearchIcon />
       </button>
     </form>

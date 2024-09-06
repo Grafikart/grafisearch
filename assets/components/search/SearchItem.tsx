@@ -3,6 +3,8 @@ import { domainName } from "../../functions/string.ts";
 import { youtubeThumbnail } from "../../functions/youtube.ts";
 import clsx from "clsx";
 
+export const SearchItemClassName = "search-result" as const;
+
 export function SearchItem({ result }: { result: SearchResult }) {
   const favicon = `https://external-content.duckduckgo.com/ip3/${result.domain}.ico`;
   const isYoutubeURL = result.url.startsWith("https://www.youtube.com/watch");
@@ -25,7 +27,7 @@ export function SearchItem({ result }: { result: SearchResult }) {
 
   return (
     <article
-      class={clsx("search-result", isYoutubeURL && "search-result--img")}
+      class={clsx(SearchItemClassName, isYoutubeURL && "search-result--img")}
     >
       {thumbnail && (
         <img className="search-result__img" src={thumbnail} alt="" />

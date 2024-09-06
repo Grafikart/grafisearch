@@ -5,10 +5,12 @@ import { Timer } from "../components/Timer.tsx";
 import { SearchForm } from "../components/search/SearchForm.tsx";
 import { SearchItem } from "../components/search/SearchItem.tsx";
 import { SearchWallpaperButton } from "../components/search/SearchWallpaperButton.tsx";
+import { useArrowNavigation } from "../hooks/useArrowNavigation.ts";
 
 export function SearchPage() {
   const location = useLocation();
   const { columns, query, isFetching, component } = useSearchResults(location);
+  useArrowNavigation();
 
   const onSearch = (q: string) => {
     const url = new URL(window.location.pathname, window.location.origin);

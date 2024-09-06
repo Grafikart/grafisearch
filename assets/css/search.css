@@ -102,7 +102,8 @@ body.has-results {
   transition: opacity 0.3s;
 }
 
-.search-form button:hover {
+.search-form button:hover,
+.search-form button:focus {
   color: var(--color);
 }
 
@@ -151,6 +152,10 @@ body.has-results {
   border: 1px solid transparent;
   padding: var(--padding);
   margin: calc(var(--padding) * -1);
+}
+
+.search-result a:focus::after {
+  border:solid 1px var(--border);
 }
 
 .search-result:hover {
