@@ -7,7 +7,7 @@ import { SearchItemClassName } from "../components/search/SearchItem";
 export function useArrowNavigation() {
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
-      if (!document.activeElement) {
+      if (!document.activeElement || document.activeElement.tagName !== "A") {
         return;
       }
       if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
