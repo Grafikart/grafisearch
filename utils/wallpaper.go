@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	bingURL = `https://www.bing.com`
-	bingAPI = `https://www.bing.com/HPImageArchive.aspx?format=xml&idx=%d&n=1&mkt=%s`
+	bingURL        = `https://www.bing.com`
+	bingAPI        = `https://www.bing.com/HPImageArchive.aspx?format=xml&idx=%d&n=1&mkt=%s`
+	bingResolution = `UHD`
 )
 
 func FetchBingWallpaper() (string, error) {
@@ -47,5 +48,5 @@ func FetchBingWallpaper() (string, error) {
 	// get image element
 	imgElem := doc.SelectElement("images").SelectElement("image")
 
-	return fmt.Sprintf("%s%s_%s", bingURL, imgElem.SelectElement("urlBase").Text(), "1920x1080.jpg"), nil
+	return fmt.Sprintf("%s%s_%s%s", bingURL, imgElem.SelectElement("urlBase").Text(), bingResolution, ".jpg"), nil
 }
