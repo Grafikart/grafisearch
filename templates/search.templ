@@ -1,0 +1,8 @@
+package templates;
+
+templ SearchPage(bangs map[string]string) {
+	@Layout("GrafiSearch") {
+		<div id="search"/>
+		@templ.JSONScript("bangs", bangs)
+	}
+}

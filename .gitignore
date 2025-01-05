@@ -1,11 +1,7 @@
-# Goreleaser
-dist/
-/grafisearch
-.pnpm-store/
-
-# Assets
-/static/app.js
-/static/style.css
+templates/*.go
+templates/*.txt
+grafisearch
+public/assets
 
 # Logs
 logs
@@ -16,6 +12,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+public/assets
 node_modules
 dist
 dist-ssr

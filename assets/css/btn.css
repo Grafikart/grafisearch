@@ -1,0 +1,51 @@
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  background-color: var(--backgroundHover);
+  color: var(--color);
+  border-radius: 100%;
+  display: grid;
+  place-items: center;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -1rem;
+    border-radius: 100%;
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+button svg {
+  transition: 0.3s;
+}
+
+button.is-loading {
+  &::after {
+    content: "";
+    position: absolute;
+    left: calc(50% - 10px);
+    top: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    border-top: 3px solid currentColor;
+    border-right: 3px solid transparent;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+  svg {
+    transition: 0.3s;
+    opacity: 0;
+    transition: 0.3s;
+  }
+}
