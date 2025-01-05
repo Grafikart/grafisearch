@@ -1,6 +1,7 @@
 # Goreleaser
 dist/
 /grafisearch
+.pnpm-store/
 
 # Assets
 /static/app.js

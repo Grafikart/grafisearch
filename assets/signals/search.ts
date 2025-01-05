@@ -40,16 +40,6 @@ export const pushSearch = (q: string) => {
     return;
   }
 
-  // Multi line search goes into an IA conversation
-  if (q.includes("\n")) {
-    const url = new URL(
-      "https://www.bing.com/search?showconv=1&sendquery=1&q=s",
-    );
-    url.searchParams.set("q", q);
-    window.location.replace(url);
-    return;
-  }
-
   const url = new URL(window.location.href);
   q ? url.searchParams.set("q", q) : url.searchParams.delete("q");
   history.pushState(null, "", url.toString());

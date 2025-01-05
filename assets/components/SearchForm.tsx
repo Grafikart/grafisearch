@@ -54,9 +54,6 @@ export function SearchForm({ element }: Props) {
         contentEditable
         autoFocus
         className="search-input"
-        name="q"
-        type="text"
-        autoComplete="off"
         onFocus={() => (isFocused.value = true)}
         onBlur={() => (isFocused.value = false)}
         onKeyDown={handleKeyDown}
