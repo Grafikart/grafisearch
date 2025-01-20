@@ -30,7 +30,7 @@ var redirectBangs = map[string]string{
 	"!iad":  "https://www.phind.com/search?q=%s&c=&source=searchbox&init=true",
 	"!gmap": "https://www.google.fr/maps?hl=fr&q=%s",
 	"!img":  "https://duckduckgo.com/?q=%s&iax=images&ia=images",
-	"!ia":   "https://www.bing.com/search?showconv=1&sendquery=1&q=%s",
+	"!ia":   "https://www.perplexity.ai/search/?q=%s",
 }
 
 func SearchHandler(w http.ResponseWriter, r *http.Request) {
