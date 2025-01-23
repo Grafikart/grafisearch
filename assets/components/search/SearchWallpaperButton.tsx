@@ -4,18 +4,19 @@ import { WallpaperIcon } from "../icons.tsx";
 import { jsonFetch } from "../../functions/http.ts";
 import clsx from "clsx";
 
-
 const storageKey = "grafisearch-wallpaper";
-const baseWallpaper = "/images/red-forest.png";
+const baseWallpaper = "/images/wallpaper.jpg";
 
 type WallpaperState = {
   time: number;
   url: string;
-}
+};
 
 // Set the wallpaper from the local storage
 const storageValue = localStorage.getItem(storageKey);
-const state = storageValue ? JSON.parse(storageValue) as WallpaperState : {time: 0, url: baseWallpaper};
+const state = storageValue
+  ? (JSON.parse(storageValue) as WallpaperState)
+  : { time: 0, url: baseWallpaper };
 document.body.style.backgroundImage = `url(${state.url})`;
 
 // If the wallpaper is stale, fetch a new one
@@ -35,7 +36,9 @@ function resetWallpaper() {
 
 async function applyBingWallpaper() {
   try {
-    const {wallpaper} = await jsonFetch<{wallpaper: string}>("/api/wallpaper")
+    const { wallpaper } = await jsonFetch<{ wallpaper: string }>(
+      "/api/wallpaper"
+    );
     state.url = wallpaper;
     state.time = today.getTime();
     localStorage.setItem(storageKey, JSON.stringify(state));
@@ -53,14 +56,16 @@ export function SearchWallpaperButton() {
   const toggleWallpaper = () => {
     if (state.url === baseWallpaper) {
       isLoading.value = true;
-      applyBingWallpaper().finally(() => isLoading.value = false);
+      applyBingWallpaper().finally(() => (isLoading.value = false));
     } else {
-      resetWallpaper()
+      resetWallpaper();
     }
   };
 
-  const className = useComputed(() => clsx("search-wallpaper", isLoading.value && "is-loading"));
-  
+  const className = useComputed(() =>
+    clsx("search-wallpaper", isLoading.value && "is-loading")
+  );
+
   return (
     <ButtonIcon onClick={toggleWallpaper} className={className.value}>
       <WallpaperIcon />

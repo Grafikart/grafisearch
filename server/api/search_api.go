@@ -24,6 +24,7 @@ func SearchWithParser(fn func(string) ([]search.SearchResult, error)) http.Handl
 		}
 
 		w.Header().Set("Cache-Control", "public, max-age=3600")
+		w.Header().Set("Content-Type", "application/json")
 
 		data, err := json.Marshal(results)
 		if err != nil {

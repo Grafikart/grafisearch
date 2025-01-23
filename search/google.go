@@ -10,8 +10,11 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
+/**
+* This doesn't work anymore since google force JavaScript for search results since January 2025
+ */
 func GetGoogleResults(q string) ([]SearchResult, error) {
-	res, err := utils.Fetch(fmt.Sprintf("https://google.com/search?q=%s", url.QueryEscape(q)))
+	res, err := utils.Fetch(fmt.Sprintf("https://www.google.com/search?q=%s", url.QueryEscape(q)))
 	if err != nil {
 		return nil, err
 	}

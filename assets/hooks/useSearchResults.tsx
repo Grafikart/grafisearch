@@ -66,7 +66,7 @@ export function useSearchResults(location: LocationHook) {
         query: { q: query },
         signal,
       }).then(pushColumn),
-      jsonFetch<SearchResult[]>("/api/google", {
+      jsonFetch<SearchResult[]>("/api/brave", {
         query: { q: query },
         signal,
       }).then(pushColumn),
