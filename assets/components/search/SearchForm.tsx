@@ -63,9 +63,6 @@ export function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
         role="textbox"
         contentEditable
         autoFocus
-        name="q"
-        type="text"
-        autoComplete="off"
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={handleKeyDown}
