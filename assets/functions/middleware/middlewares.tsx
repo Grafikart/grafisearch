@@ -6,7 +6,13 @@ import { handleTimer } from "./timer.ts";
  * Pass the query through a list of middleware that can intercept the default behaviour and add custom logic
  */
 export const matchMiddlewares = (q: string): ComponentChild => {
-  for (const middleware of [handleBangs, handleCalculation, handleTimer, handleMaj]) {
+  for (const middleware of [
+    handleBangs,
+    handleCalculation,
+    handleTimer,
+    handleMaj,
+    handleHex,
+  ]) {
     const component = middleware(q);
     if (component) {
       return component;
@@ -14,6 +20,14 @@ export const matchMiddlewares = (q: string): ComponentChild => {
   }
   return null;
 };
+
+export function handleHex(q: string): JSX.Element | null {
+  if (q.startsWith("!hex")) {
+    const n = Math.round(parseInt(q.replaceAll("!hex", "").trim(), 10) * 2.55);
+    return <div class="search-top__text">= {n.toString(16)}</div>;
+  }
+  return null;
+}
 
 export function handleCalculation(q: string): JSX.Element | null {
   if (q.match(/^[0-9]{1}[0-9\s\+\/\-\*\.]*$/)) {

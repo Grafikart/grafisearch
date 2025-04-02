@@ -33,8 +33,8 @@ export function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
       "search-form",
       isFocused.value && "is-focused",
       isMultiline.value && "is-multiline",
-      isLoading.value && "is-loading",
-    ),
+      isLoading.value && "is-loading"
+    )
   );
   const btnClassName = useComputed(() => clsx(isLoading.value && "is-loading"));
 
@@ -63,9 +63,6 @@ export function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
         role="textbox"
         contentEditable
         autoFocus
-        name="q"
-        type="text"
-        autoComplete="off"
         onFocus={onFocus}
         onBlur={onBlur}
         onKeyDown={handleKeyDown}
