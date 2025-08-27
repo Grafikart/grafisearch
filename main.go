@@ -23,9 +23,12 @@ var macOSService string
 //go:embed install/grafisearch.service
 var linuxService string
 
-const port = ":8042"
-
 func main() {
+	if err := utils.ReadConfigFile(); err != nil {
+		panic(fmt.Sprintf("Cannot open config file %v", err))
+	}
+
+	listen_addr := utils.Config.Addr
 	// Handle "install" flag
 	if len(os.Args) >= 2 && os.Args[1] == "install" {
 		err := utils.InstallApp(linuxService, macOSService)
@@ -66,8 +69,8 @@ func main() {
 		publicServer.ServeHTTP(w, r)
 	})
 
-	fmt.Printf("Server is running on http://localhost%s\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	fmt.Printf("Server is running on http://%s\n", listen_addr)
+	log.Fatal(http.ListenAndServe(listen_addr, nil))
 }
 
 // Inject assets tags (as a string) in the context
