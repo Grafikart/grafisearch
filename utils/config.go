@@ -14,7 +14,11 @@ type ConfigMap struct {
 	Bangs   map[string]string `json:"bangs"`
 }
 
-var Config ConfigMap
+var Config = ConfigMap{
+	Addr:    ":8042",
+	Filters: map[string]string{},
+	Bangs:   map[string]string{},
+}
 
 //go:embed config.json
 var configFileTemplate string
