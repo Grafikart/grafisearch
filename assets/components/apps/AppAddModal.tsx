@@ -1,15 +1,19 @@
 import { useSignal, useComputed } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
-import { addApp, getFaviconUrl } from "./store.ts";
+import { addApp, updateApp, getFaviconUrl } from "./store.ts";
+import type { App } from "./types.ts";
 
 interface Props {
   onClose: () => void;
+  editApp?: App;
 }
 
-export function AppAddModal({ onClose }: Props) {
-  const name = useSignal("");
-  const url = useSignal("");
+export function AppAddModal({ onClose, editApp }: Props) {
+  const name = useSignal(editApp?.name ?? "");
+  const url = useSignal(editApp?.url ?? "");
   const nameRef = useRef<HTMLInputElement>(null);
+
+  const isEditMode = Boolean(editApp);
 
   const isValidUrl = useComputed(() => {
     try {
@@ -42,10 +46,17 @@ export function AppAddModal({ onClose }: Props) {
     e.preventDefault();
     if (!canSubmit.value) return;
 
-    addApp({
-      name: name.value.trim(),
-      url: url.value.trim(),
-    });
+    if (isEditMode && editApp) {
+      updateApp(editApp.id, {
+        name: name.value.trim(),
+        url: url.value.trim(),
+      });
+    } else {
+      addApp({
+        name: name.value.trim(),
+        url: url.value.trim(),
+      });
+    }
     onClose();
   };
 
@@ -58,7 +69,7 @@ export function AppAddModal({ onClose }: Props) {
   return (
     <div class="app-modal-overlay" onClick={handleOverlayClick}>
       <div class="app-modal">
-        <h2>Ajouter un raccourci</h2>
+        <h2>{isEditMode ? "Modifier le raccourci" : "Ajouter un raccourci"}</h2>
         <form onSubmit={handleSubmit}>
           <div class="app-modal-field">
             <label for="app-name">Nom</label>
@@ -92,7 +103,7 @@ export function AppAddModal({ onClose }: Props) {
               Annuler
             </button>
             <button type="submit" class="btn-add" disabled={!canSubmit.value}>
-              Ajouter
+              {isEditMode ? "Enregistrer" : "Ajouter"}
             </button>
           </div>
         </form>

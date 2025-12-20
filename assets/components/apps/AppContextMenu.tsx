@@ -6,9 +6,10 @@ interface Props {
   app: App;
   position: { x: number; y: number };
   onClose: () => void;
+  onEdit: () => void;
 }
 
-export function AppContextMenu({ app, position, onClose }: Props) {
+export function AppContextMenu({ app, position, onClose, onEdit }: Props) {
   useEffect(() => {
     const handleClick = () => onClose();
     const handleEscape = (e: KeyboardEvent) => {
@@ -24,6 +25,12 @@ export function AppContextMenu({ app, position, onClose }: Props) {
     };
   }, [onClose]);
 
+  const handleEdit = (e: MouseEvent) => {
+    e.stopPropagation();
+    onEdit();
+    onClose();
+  };
+
   const handleDelete = (e: MouseEvent) => {
     e.stopPropagation();
     removeApp(app.id);
@@ -35,6 +42,7 @@ export function AppContextMenu({ app, position, onClose }: Props) {
       class="app-context-menu"
       style={`left: ${position.x}px; top: ${position.y}px`}
     >
+      <button onClick={handleEdit}>Modifier</button>
       <button onClick={handleDelete}>Supprimer</button>
     </div>
   );

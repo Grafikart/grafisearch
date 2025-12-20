@@ -32,6 +32,21 @@ export function removeApp(id: string) {
   saveApps(apps.value);
 }
 
+export function updateApp(id: string, data: Omit<App, "id">) {
+  apps.value = apps.value.map((app) =>
+    app.id === id ? { ...app, ...data } : app
+  );
+  saveApps(apps.value);
+}
+
+export function reorderApps(fromIndex: number, toIndex: number) {
+  const newApps = [...apps.value];
+  const [moved] = newApps.splice(fromIndex, 1);
+  newApps.splice(toIndex, 0, moved);
+  apps.value = newApps;
+  saveApps(apps.value);
+}
+
 export function getFaviconUrl(url: string): string {
   try {
     const domain = new URL(url).hostname;

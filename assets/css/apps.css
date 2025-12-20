@@ -12,17 +12,39 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 12px;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-radius: 16px;
   text-decoration: none;
   position: relative;
-  transition: background 0.2s;
-  min-width: 80px;
+  width: 120px;
+  height: 140px;
+  background: var(--backgroundLight);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
 .app-item:hover {
-  background: var(--backgroundHover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  border-color: var(--color);
+}
+
+.app-item.is-dragging {
+  opacity: 0.5;
+}
+
+.app-item[draggable] {
+  cursor: grab;
+}
+
+.app-item[draggable]:active {
+  cursor: grabbing;
 }
 
 .app-favicon {
@@ -35,7 +57,7 @@
 .app-name {
   font-size: 0.875rem;
   color: var(--text);
-  max-width: 80px;
+  max-width: 100px;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -48,23 +70,25 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 12px;
+  padding: 1.5rem;
+  border-radius: 16px;
   background: transparent;
   border: 2px dashed var(--border);
   color: var(--text);
   cursor: pointer;
-  min-width: 80px;
-  min-height: 80px;
-  font-size: 1.5rem;
+  width: 120px;
+  height: 140px;
+  font-size: 2rem;
   transition:
     background 0.2s,
-    border-color 0.2s;
+    border-color 0.2s,
+    transform 0.2s;
 }
 
 .app-add:hover {
-  background: var(--backgroundHover);
+  background: var(--backgroundLight);
   border-color: var(--color);
+  transform: translateY(-2px);
 }
 
 /* Context Menu */
