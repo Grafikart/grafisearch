@@ -1,0 +1,209 @@
+.apps-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  text-decoration: none;
+  position: relative;
+  transition: background 0.2s;
+  min-width: 80px;
+}
+
+.app-item:hover {
+  background: var(--backgroundHover);
+}
+
+.app-favicon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.app-name {
+  font-size: 0.875rem;
+  color: var(--text);
+  max-width: 80px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: transparent;
+  border: 2px dashed var(--border);
+  color: var(--text);
+  cursor: pointer;
+  min-width: 80px;
+  min-height: 80px;
+  font-size: 1.5rem;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.app-add:hover {
+  background: var(--backgroundHover);
+  border-color: var(--color);
+}
+
+/* Context Menu */
+.app-context-menu {
+  position: fixed;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  padding: 0.25rem;
+  min-width: 120px;
+}
+
+.app-context-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.app-context-menu button:hover {
+  background: var(--backgroundHover);
+}
+
+/* Modal */
+.app-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.app-modal {
+  background: var(--background);
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.app-modal h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--title);
+}
+
+.app-modal-field {
+  margin-bottom: 1rem;
+}
+
+.app-modal-field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.app-modal-field input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--backgroundLight);
+  color: var(--color);
+  font-size: 1rem;
+}
+
+.app-modal-field input:focus {
+  outline: none;
+  border-color: var(--color);
+}
+
+.app-modal-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--backgroundLight);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.app-modal-preview img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.app-modal-preview span {
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.app-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.app-modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.app-modal-actions .btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.app-modal-actions .btn-cancel:hover {
+  background: var(--backgroundHover);
+}
+
+.app-modal-actions .btn-add {
+  background: var(--color);
+  border: none;
+  color: var(--background);
+}
+
+.app-modal-actions .btn-add:hover {
+  opacity: 0.9;
+}
+
+.app-modal-actions .btn-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
