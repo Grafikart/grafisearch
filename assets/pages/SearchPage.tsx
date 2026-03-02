@@ -37,7 +37,8 @@ export function SearchPage() {
       <main class="search-main">
         {columns.value.map((column, index) => (
           <div class="search-column" key={index}>
-            {column.map((result, k) => (
+            <div class="search-engine-label">{column.engine}</div>
+            {column.results.map((result, k) => (
               <SearchItem result={result} key={k} />
             ))}
           </div>

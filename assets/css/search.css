@@ -142,6 +142,14 @@ body.has-results {
   align-content: flex-start;
 }
 
+.search-engine-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.5;
+  font-weight: 600;
+}
+
 .search-result {
   --padding: 0.6rem;
   display: flex;

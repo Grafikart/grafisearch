@@ -50,7 +50,7 @@ export function reorderApps(fromIndex: number, toIndex: number) {
 export function getFaviconUrl(url: string): string {
   try {
     const domain = new URL(url).hostname;
-    return `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+    return `https://icons.duckduckgo.com/ip3/${domain}.ico`;
   } catch {
     return "";
   }

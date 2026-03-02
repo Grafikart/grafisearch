@@ -21,10 +21,15 @@ export type SearchResult = {
   siteName?: string;
 };
 
-const baseTitle = "GrafiSearch";
+const baseTitle = "Research";
+
+export type SearchColumn = {
+  engine: string;
+  results: SearchResult[];
+};
 
 export function useSearchResults(location: LocationHook) {
-  const columns = useSignal<SearchResult[][]>([]);
+  const columns = useSignal<SearchColumn[]>([]);
   const query = location.query.q;
   const engine = location.query.engine;
   const isFetching = useSignal(false);
@@ -35,9 +40,9 @@ export function useSearchResults(location: LocationHook) {
     document.title = query ? `${query} - ${baseTitle}` : baseTitle;
   }, [query]);
 
-  const pushColumn = (column: SearchResult[]) => {
+  const pushColumn = (engineName: string, results: SearchResult[]) => {
     withViewTransition(() => {
-      columns.value = [...columns.value, column];
+      columns.value = [...columns.value, { engine: engineName, results }];
     });
   };
 
@@ -63,13 +68,13 @@ export function useSearchResults(location: LocationHook) {
     isFetching.value = true;
 
     // Determine which engines to use based on query parameter
-    const engines = engine === "youtube" ? ["youtube"] : ["ddg", "brave"];
+    const engines = engine === "youtube" ? ["youtube"] : ["ddg", "startpage"];
     const promises = engines.map(eng => {
       const endpoint = `/api/${eng}`;
       return jsonFetch<SearchResult[]>(endpoint, {
         query: { q: query },
         signal,
-      }).then(pushColumn);
+      }).then(results => pushColumn(eng, results));
     });
 
     Promise.allSettled(promises).then(() => {

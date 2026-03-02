@@ -50,7 +50,7 @@ func main() {
 	// API
 	http.HandleFunc("/api/google", api.SearchWithParser(search.GetGoogleResults))
 	http.HandleFunc("/api/ddg", api.SearchWithParser(search.GetDDGResults))
-	http.HandleFunc("/api/brave", api.SearchWithParser(search.GetBraveResults))
+	http.HandleFunc("/api/startpage", api.SearchWithParser(search.GetStartpageResults))
 	http.HandleFunc("/api/youtube", api.SearchWithParser(search.GetYouTubeResults))
 	http.HandleFunc("/api/wallpaper", api.WallpaperHandler)
 
