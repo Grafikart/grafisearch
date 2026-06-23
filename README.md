@@ -19,3 +19,9 @@ Chacun a sa vision du moteur de recherche perso, mes points importants sont les 
 
 L'objectif est donc d'avoir un binaire qui lance un serveur web (pour que ça soit rapide) qui servira de moteur de recherche.
 Ce serveur web récupèrera les résultats des différents moteur de recherche pour les reformater.
+
+## Déploiement avec Docker
+
+```bash
+docker compose up -d --build
+```

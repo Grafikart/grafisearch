@@ -1,0 +1,12 @@
+services:
+  grafisearch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8042:8042"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
