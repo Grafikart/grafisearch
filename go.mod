@@ -1,4 +1,4 @@
-module grafikart/grafisearch
+module local-research
 
 go 1.24.0
 

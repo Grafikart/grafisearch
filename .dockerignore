@@ -1,0 +1,48 @@
+# Git
+.git
+.gitignore
+
+# Node modules and build artifacts
+node_modules
+dist
+build
+
+# Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+local-research
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs
+
+# Docker files (to avoid recursive copy)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+.tmp
+.temp
+
+# Build info files
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo
+
+# Claude AI file
+CLAUDE.md

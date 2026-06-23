@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
-	"grafikart/grafisearch/search"
-	"grafikart/grafisearch/server"
+	"local-research/search"
+	"local-research/server"
 )
 
 func SearchWithParser(fn func(string) ([]search.SearchResult, error)) http.HandlerFunc {

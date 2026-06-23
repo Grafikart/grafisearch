@@ -2,7 +2,7 @@ package search
 
 import (
 	"fmt"
-	"grafikart/grafisearch/utils"
+	"local-research/utils"
 	"net/url"
 
 	"github.com/PuerkitoBio/goquery"

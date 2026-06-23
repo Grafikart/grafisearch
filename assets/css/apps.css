@@ -1,0 +1,286 @@
+.apps-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.app-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  text-decoration: none;
+  position: relative;
+  width: 120px;
+  height: 140px;
+  background: linear-gradient(
+    145deg,
+    rgba(45, 50, 70, 0.7) 0%,
+    rgba(25, 29, 45, 0.6) 100%
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-item:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(169, 177, 214, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(169, 177, 214, 0.4);
+  background: linear-gradient(
+    145deg,
+    rgba(55, 60, 85, 0.75) 0%,
+    rgba(30, 35, 55, 0.65) 100%
+  );
+}
+
+.app-item.is-dragging {
+  opacity: 0.6;
+  transform: scale(1.05) rotate(2deg);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 0 2px rgba(169, 177, 214, 0.3);
+  z-index: 10;
+}
+
+.app-item[draggable] {
+  cursor: grab;
+}
+
+.app-item[draggable]:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.app-favicon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-item:hover .app-favicon {
+  transform: scale(1.08);
+}
+
+.app-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text);
+  max-width: 100px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
+}
+
+.app-item:hover .app-name {
+  color: var(--color);
+}
+
+.app-add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border-radius: 20px;
+  background: linear-gradient(
+    145deg,
+    rgba(35, 40, 60, 0.4) 0%,
+    rgba(20, 24, 40, 0.3) 100%
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  cursor: pointer;
+  width: 120px;
+  height: 140px;
+  font-size: 2rem;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-add:hover {
+  background: linear-gradient(
+    145deg,
+    rgba(45, 50, 75, 0.5) 0%,
+    rgba(30, 35, 55, 0.4) 100%
+  );
+  border-color: rgba(169, 177, 214, 0.3);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(169, 177, 214, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.app-add:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* Context Menu */
+.app-context-menu {
+  position: fixed;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  padding: 0.25rem;
+  min-width: 120px;
+}
+
+.app-context-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.app-context-menu button:hover {
+  background: var(--backgroundHover);
+}
+
+/* Modal */
+.app-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.app-modal {
+  background: var(--background);
+  border-radius: 12px;
+  padding: 1.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.app-modal h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  color: var(--title);
+}
+
+.app-modal-field {
+  margin-bottom: 1rem;
+}
+
+.app-modal-field label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+.app-modal-field input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--backgroundLight);
+  color: var(--color);
+  font-size: 1rem;
+}
+
+.app-modal-field input:focus {
+  outline: none;
+  border-color: var(--color);
+}
+
+.app-modal-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--backgroundLight);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.app-modal-preview img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.app-modal-preview span {
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.app-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.app-modal-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.app-modal-actions .btn-cancel {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.app-modal-actions .btn-cancel:hover {
+  background: var(--backgroundHover);
+}
+
+.app-modal-actions .btn-add {
+  background: var(--color);
+  border: none;
+  color: var(--background);
+}
+
+.app-modal-actions .btn-add:hover {
+  opacity: 0.9;
+}
+
+.app-modal-actions .btn-add:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

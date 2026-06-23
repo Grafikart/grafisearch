@@ -3,7 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
-	"grafikart/grafisearch/utils"
+	"local-research/utils"
 	"net/http"
 	"net/url"
 	"strings"

@@ -65,7 +65,7 @@ export function Timer() {
     }
     const updateSeconds = () => {
       seconds.value = Math.max(getTimerSeconds(info), 0);
-      document.title = timeInText.value + " - Grafisearch";
+      document.title = timeInText.value + " - Research";
     };
     const timer = setInterval(() => {
       updateSeconds();

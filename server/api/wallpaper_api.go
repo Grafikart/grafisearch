@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"grafikart/grafisearch/utils"
+	"local-research/utils"
 	"net/http"
 )
 

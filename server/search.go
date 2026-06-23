@@ -2,8 +2,8 @@ package server
 
 import (
 	"fmt"
-	"grafikart/grafisearch/templates"
-	"grafikart/grafisearch/utils"
+	"local-research/templates"
+	"local-research/utils"
 	"net/http"
 	"net/url"
 	"strings"
@@ -21,7 +21,7 @@ var redirectBangs = map[string]string{
 	"!wr":   "https://www.wordreference.com/enfr/%s",
 	"!tr":   "https://www.deepl.com/fr/translator#en/fr/%s",
 	"!imdb": "https://www.imdb.com/find?s=all&q=%s",
-	"!gh":   "https://github.com/search?q=%s",
+	"!gh":   "https://github.com/Nardjo/%s",
 	"!yt":   "https://www.youtube.com/results?search_query=%s",
 	"!d":    "https://www.larousse.fr/dictionnaires/francais/%s",
 	"!g":    "https://www.google.com/search?q=%s",

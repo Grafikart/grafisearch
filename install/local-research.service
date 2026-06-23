@@ -1,0 +1,11 @@
+[Unit]
+Description=Local Research
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart={{ .Path }}
+
+[Install]
+WantedBy=default.target

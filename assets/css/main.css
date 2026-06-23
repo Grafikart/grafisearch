@@ -3,6 +3,7 @@
 @import "reset.css" layer(base);
 @import "btn.css" layer(theme);
 @import "search.css" layer(theme);
+@import "apps.css" layer(theme);
 
 @layer base {
   :root {

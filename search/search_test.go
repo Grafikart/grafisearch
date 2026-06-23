@@ -13,7 +13,7 @@ func TestSearchEngines(t *testing.T) {
 	}{
 		{"Google", GetGoogleResults, "GetGoogleResults"},
 		{"DuckduckGo", GetDDGResults, "GetDDGResults"},
-		{"Brave", GetBraveResults, "GetBraveResults"},
+		{"Startpage", GetStartpageResults, "GetStartpageResults"},
 	}
 
 	for _, tt := range tests {

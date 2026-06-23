@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  local-research:
+    build: .
+    ports:
+      - "8042:8042"
+    environment:
+      - PORT=8042
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--quiet",
+          "--tries=1",
+          "--spider",
+          "http://localhost:8042/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

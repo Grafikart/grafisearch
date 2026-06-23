@@ -4,10 +4,10 @@ import (
 	"context"
 	"embed"
 	"fmt"
-	"grafikart/grafisearch/search"
-	"grafikart/grafisearch/server"
-	"grafikart/grafisearch/server/api"
-	"grafikart/grafisearch/utils"
+	"local-research/search"
+	"local-research/server"
+	"local-research/server/api"
+	"local-research/utils"
 	"io/fs"
 	"log"
 	"net/http"
@@ -17,10 +17,10 @@ import (
 //go:embed all:public
 var assets embed.FS
 
-//go:embed install/com.grafisearch.plist
+//go:embed install/com.local-research.plist
 var macOSService string
 
-//go:embed install/grafisearch.service
+//go:embed install/local-research.service
 var linuxService string
 
 const port = ":8042"
@@ -41,17 +41,17 @@ func main() {
 	}
 
 	viteAssets := server.NewViteAssets(publicFS)
-	frontMiddleware := createFrontEndMiddleware(*viteAssets)
+	frontMiddleware := createFrontEndMiddleware(viteAssets)
 	publicServer := http.FileServer(http.FS(publicFS))
 
 	// Static Assets
 	http.HandleFunc("/sse", server.SSEHandler)
-	http.HandleFunc("/assets/", viteAssets.ServeAssets)
 
 	// API
 	http.HandleFunc("/api/google", api.SearchWithParser(search.GetGoogleResults))
 	http.HandleFunc("/api/ddg", api.SearchWithParser(search.GetDDGResults))
-	http.HandleFunc("/api/brave", api.SearchWithParser(search.GetBraveResults))
+	http.HandleFunc("/api/startpage", api.SearchWithParser(search.GetStartpageResults))
+	http.HandleFunc("/api/youtube", api.SearchWithParser(search.GetYouTubeResults))
 	http.HandleFunc("/api/wallpaper", api.WallpaperHandler)
 
 	// FrontEnd URLs
@@ -71,10 +71,10 @@ func main() {
 }
 
 // Inject assets tags (as a string) in the context
-func createFrontEndMiddleware(vite server.ViteAssets) func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
-	html := vite.GetHeadHTML()
+func createFrontEndMiddleware(vite *server.ViteAssets) func(func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 	return func(next func(http.ResponseWriter, *http.Request)) func(http.ResponseWriter, *http.Request) {
 		return func(w http.ResponseWriter, r *http.Request) {
+			html := vite.GetHeadHTML()
 			ctx := context.WithValue(r.Context(), "assets", html)
 			next(w, r.WithContext(ctx))
 		}
