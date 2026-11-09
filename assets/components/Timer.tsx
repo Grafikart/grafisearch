@@ -1,9 +1,4 @@
-import {
-  signal,
-  useComputed,
-  useSignal,
-  useSignalEffect,
-} from "@preact/signals";
+import { signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { useRef } from "preact/hooks";
 import { secondsToString } from "../functions/time.ts";
 import { withViewTransition } from "../functions/dom.ts";
@@ -12,9 +7,7 @@ type TimerInfo = { start: number } | { end: number; duration: number } | null;
 
 const storageKey = "timer";
 const storageItem = localStorage.getItem(storageKey);
-const timerInfo = signal<TimerInfo>(
-  storageItem ? JSON.parse(storageItem) : null
-);
+const timerInfo = signal<TimerInfo>(storageItem ? JSON.parse(storageItem) : null);
 
 // Allow updating the signal from outside
 export const setTimerInfo = (info: TimerInfo) => {
@@ -38,9 +31,7 @@ const getTimerSeconds = (info: TimerInfo): number => {
   return Math.max(0, Math.round((info.end - Date.now()) / 1000));
 };
 
-const isCountdown = (
-  info: TimerInfo
-): info is { end: number; duration: number } => {
+const isCountdown = (info: TimerInfo): info is { end: number; duration: number } => {
   return Boolean(info && "end" in info);
 };
 
@@ -61,7 +52,7 @@ export function Timer() {
     const originalTitle = document.title;
     const info = timerInfo.value;
     if (info === null) {
-        return;
+      return;
     }
     const updateSeconds = () => {
       seconds.value = Math.max(getTimerSeconds(info), 0);

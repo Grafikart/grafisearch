@@ -29,3 +29,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vitest/

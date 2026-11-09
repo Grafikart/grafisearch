@@ -11,27 +11,18 @@ export function SearchItem({ result }: { result: SearchResult }) {
   const siteName = result.siteName ?? domainName(result.url);
   let description = result.desc;
   let thumbnail: string | null = null;
-  let source = result.url
-    .replace("https://", "")
-    .replace("www.", "")
-    .replace(/\/$/, "");
+  let source = result.url.replace("https://", "").replace("www.", "").replace(/\/$/, "");
 
   if (isYoutubeURL) {
-    source = result.author
-      ? result.author.replace("YouTube · ", "")
-      : "YouTube";
+    source = result.author ? result.author.replace("YouTube · ", "") : "YouTube";
     thumbnail = youtubeThumbnail(result.url);
   }
 
   const hasRelated = result.related && result.related.length > 0;
 
   return (
-    <article
-      class={clsx(SearchItemClassName, isYoutubeURL && "search-result--img")}
-    >
-      {thumbnail && (
-        <img className="search-result__img" src={thumbnail} alt="" />
-      )}
+    <article class={clsx(SearchItemClassName, isYoutubeURL && "search-result--img")}>
+      {thumbnail && <img className="search-result__img" src={thumbnail} alt="" />}
       <div className="search-result__header">
         <div className="search-result__favicon">
           <img src={favicon} alt="" />
@@ -45,10 +36,7 @@ export function SearchItem({ result }: { result: SearchResult }) {
         href={result.url}
         dangerouslySetInnerHTML={{ __html: result.title }}
       />
-      <p
-        class="search-result__desc"
-        dangerouslySetInnerHTML={{ __html: description }}
-      />
+      <p class="search-result__desc" dangerouslySetInnerHTML={{ __html: description }} />
       {hasRelated && (
         <div class="search-result__related">
           {result.related!.map((link) => (

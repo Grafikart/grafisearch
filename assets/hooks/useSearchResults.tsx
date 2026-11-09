@@ -61,7 +61,7 @@ export function useSearchResults(location: LocationHook) {
     const signal = abortController.signal;
     isFetching.value = true;
 
-    Promise.allSettled([
+    void Promise.allSettled([
       jsonFetch<SearchResult[]>("/api/ddg", {
         query: { q: query },
         signal,

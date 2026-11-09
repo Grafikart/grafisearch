@@ -23,7 +23,7 @@ document.body.style.backgroundImage = `url(${state.url})`;
 const today = new Date();
 today.setHours(0, 0, 0, 0);
 if (today.getDate() !== new Date(state.time).getDate()) {
-  applyBingWallpaper();
+  void applyBingWallpaper();
 }
 
 // Reset the wallpaper to the base wallpaper
@@ -36,9 +36,7 @@ function resetWallpaper() {
 
 async function applyBingWallpaper() {
   try {
-    const { wallpaper } = await jsonFetch<{ wallpaper: string }>(
-      "/api/wallpaper"
-    );
+    const { wallpaper } = await jsonFetch<{ wallpaper: string }>("/api/wallpaper");
     state.url = wallpaper;
     state.time = today.getTime();
     localStorage.setItem(storageKey, JSON.stringify(state));
@@ -56,15 +54,13 @@ export function SearchWallpaperButton() {
   const toggleWallpaper = () => {
     if (state.url === baseWallpaper) {
       isLoading.value = true;
-      applyBingWallpaper().finally(() => (isLoading.value = false));
+      void applyBingWallpaper().finally(() => (isLoading.value = false));
     } else {
       resetWallpaper();
     }
   };
 
-  const className = useComputed(() =>
-    clsx("search-wallpaper", isLoading.value && "is-loading")
-  );
+  const className = useComputed(() => clsx("search-wallpaper", isLoading.value && "is-loading"));
 
   return (
     <ButtonIcon onClick={toggleWallpaper} className={className.value}>

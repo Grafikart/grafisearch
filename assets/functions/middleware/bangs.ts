@@ -28,10 +28,7 @@ export function handleBangs(q: string): boolean {
   }
 
   window.location.replace(
-    redirectionURL.replace(
-      "%s",
-      encodeURIComponent(q.replaceAll(bang, "").trim()),
-    ),
+    redirectionURL.replace("%s", encodeURIComponent(q.replaceAll(bang, "").trim())),
   );
   return true;
 }

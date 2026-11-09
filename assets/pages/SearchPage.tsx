@@ -23,11 +23,7 @@ export function SearchPage() {
   return (
     <>
       <header class="search-top">
-        <SearchForm
-          onSearch={onSearch}
-          defaultValue={query}
-          isLoading={isFetching}
-        />
+        <SearchForm onSearch={onSearch} defaultValue={query} isLoading={isFetching} />
         {component.value}
         <Timer />
       </header>

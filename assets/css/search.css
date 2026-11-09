@@ -156,7 +156,7 @@ body.has-results {
 
 .search-result a:focus::after {
   border-radius: 4px;
-  border:solid 1px var(--border);
+  border: solid 1px var(--border);
 }
 
 .search-result:hover {

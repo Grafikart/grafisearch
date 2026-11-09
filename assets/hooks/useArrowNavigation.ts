@@ -46,9 +46,7 @@ const switchColumn = () => {
     return;
   }
 
-  (
-    sibling.querySelector(`.${SearchItemClassName} a`) as HTMLAnchorElement
-  ).focus();
+  (sibling.querySelector(`.${SearchItemClassName} a`) as HTMLAnchorElement).focus();
 };
 
 /**
@@ -59,11 +57,7 @@ const focusSiblingResult = (direction: "down" | "up") => {
   const item = focusedElement?.closest(`.${SearchItemClassName}`);
   // If we are not on a search item, focus the first one
   if (!item) {
-    (
-      document.querySelector(
-        `.${SearchItemClassName} a`,
-      ) as HTMLAnchorElement | null
-    )?.focus();
+    (document.querySelector(`.${SearchItemClassName} a`) as HTMLAnchorElement | null)?.focus();
     return;
   }
   // Select the next or previous element

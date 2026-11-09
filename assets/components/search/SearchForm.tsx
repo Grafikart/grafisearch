@@ -1,7 +1,7 @@
 import { type Signal, useComputed, useSignal } from "@preact/signals";
 import { useEffect, useRef } from "preact/hooks";
 import clsx from "clsx";
-import { JSX } from "preact/jsx-runtime";
+import type { GenericEventHandler, KeyboardEventHandler } from "preact";
 import { SearchIcon } from "../icons.tsx";
 
 type Props = {
@@ -33,20 +33,20 @@ export function SearchForm({ onSearch, defaultValue, isLoading }: Props) {
       "search-form",
       isFocused.value && "is-focused",
       isMultiline.value && "is-multiline",
-      isLoading.value && "is-loading"
-    )
+      isLoading.value && "is-loading",
+    ),
   );
   const btnClassName = useComputed(() => clsx(isLoading.value && "is-loading"));
 
   // Submit on enter (since we use a contenteditable element, we need to handle it manually)
-  const handleKeyDown: JSX.KeyboardEventHandler<HTMLDivElement> = (e) => {
+  const handleKeyDown: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       onSubmit(e);
     }
   };
 
   // Detect multiline input to add a new class on the form
-  const handleInput: JSX.GenericEventHandler<HTMLDivElement> = (e) => {
+  const handleInput: GenericEventHandler<HTMLDivElement> = (e) => {
     isMultiline.value = e.currentTarget.innerText.includes("\n");
   };
 
