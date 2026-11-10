@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"fmt"
 	"grafikart/grafisearch/utils"
 	"net/url"
@@ -8,9 +9,9 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func GetDDGResults(q string) ([]SearchResult, error) {
+func GetDDGResults(ctx context.Context, q string) ([]SearchResult, error) {
 	searchURL := fmt.Sprintf("https://html.duckduckgo.com/html/?q=%s", url.QueryEscape(q))
-	res, err := utils.Fetch(searchURL)
+	res, err := utils.Fetch(ctx, searchURL)
 
 	if err != nil {
 		return nil, err

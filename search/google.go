@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"fmt"
 	"grafikart/grafisearch/utils"
 	"io"
@@ -15,8 +16,8 @@ import (
 /**
 * This doesn't work anymore since google force JavaScript for search results since January 2025
  */
-func GetGoogleResults(q string) ([]SearchResult, error) {
-	res, err := utils.Fetch(fmt.Sprintf("https://www.google.com/search?q=%s", url.QueryEscape(q)))
+func GetGoogleResults(ctx context.Context, q string) ([]SearchResult, error) {
+	res, err := utils.Fetch(ctx, fmt.Sprintf("https://www.google.com/search?q=%s", url.QueryEscape(q)))
 	if err != nil {
 		return nil, err
 	}

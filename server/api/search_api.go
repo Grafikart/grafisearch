@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 	"grafikart/grafisearch/server"
 )
 
-func SearchWithParser(fn func(string) ([]search.SearchResult, error)) http.HandlerFunc {
+func SearchWithParser(fn func(context.Context, string) ([]search.SearchResult, error)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query().Get("q")
 
@@ -17,7 +18,7 @@ func SearchWithParser(fn func(string) ([]search.SearchResult, error)) http.Handl
 			serveError(w, errors.New("missing query parameter"))
 			return
 		}
-		results, err := fn(server.ReplaceFilterBangs(q))
+		results, err := fn(r.Context(), server.ReplaceFilterBangs(q))
 		if err != nil {
 			serveError(w, err)
 			return

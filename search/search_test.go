@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"testing"
 )
 
@@ -8,7 +9,7 @@ func TestSearchEngines(t *testing.T) {
 
 	tests := []struct {
 		name       string
-		searchFunc func(string) ([]SearchResult, error)
+		searchFunc func(context.Context, string) ([]SearchResult, error)
 		funcName   string
 	}{
 		{"Google", GetGoogleResults, "GetGoogleResults"},
@@ -19,7 +20,7 @@ func TestSearchEngines(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			q := "Grafikart"
-			res, err := tt.searchFunc(q)
+			res, err := tt.searchFunc(t.Context(), q)
 			if err != nil {
 				t.Errorf(`%s("%s") %v`, tt.funcName, q, err)
 			}

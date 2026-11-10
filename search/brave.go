@@ -1,6 +1,7 @@
 package search
 
 import (
+	"context"
 	"fmt"
 	"grafikart/grafisearch/utils"
 	"math"
@@ -10,8 +11,8 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func GetBraveResults(q string) ([]SearchResult, error) {
-	res, err := utils.Fetch(fmt.Sprintf("https://search.brave.com/search?q=%s", url.QueryEscape(q)))
+func GetBraveResults(ctx context.Context, q string) ([]SearchResult, error) {
+	res, err := utils.Fetch(ctx, fmt.Sprintf("https://search.brave.com/search?q=%s", url.QueryEscape(q)))
 	if err != nil {
 		return nil, err
 	}

@@ -1,14 +1,18 @@
 package utils
 
 import (
+	"context"
 	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
+	"time"
 )
 
-func Fetch(url string) (*http.Response, error) {
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+var fetchClient = &http.Client{Timeout: 10 * time.Second}
+
+func Fetch(ctx context.Context, url string) (*http.Response, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -32,8 +36,7 @@ func Fetch(url string) (*http.Response, error) {
 		req.Header.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36")
 	}
 
-	client := &http.Client{}
-	res, err := client.Do(req)
+	res, err := fetchClient.Do(req)
 	if err != nil {
 		return nil, err
 	}

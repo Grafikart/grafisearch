@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"grafikart/grafisearch/utils"
@@ -12,7 +13,7 @@ import (
 // Redirect to the weather site for the given location
 func WeatherHandler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query().Get("q")
-	location, err := extractUrlFromYrNoDk(q)
+	location, err := extractUrlFromYrNoDk(r.Context(), q)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -29,8 +30,8 @@ type yrNoDkSuggest struct {
 	} `json:"_embedded,omitempty"`
 }
 
-func extractUrlFromYrNoDk(s string) (string, error) {
-	r, err := utils.Fetch(fmt.Sprintf("https://www.yr.no/api/v0/locations/suggest?language=fr&q=%s", url.QueryEscape(s)))
+func extractUrlFromYrNoDk(ctx context.Context, s string) (string, error) {
+	r, err := utils.Fetch(ctx, fmt.Sprintf("https://www.yr.no/api/v0/locations/suggest?language=fr&q=%s", url.QueryEscape(s)))
 	if err != nil {
 		return "", err
 	}
