@@ -21,6 +21,7 @@ func GetGoogleResults(ctx context.Context, q string) ([]SearchResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	var body io.Reader
 	body = res.Body

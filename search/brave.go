@@ -16,6 +16,7 @@ func GetBraveResults(ctx context.Context, q string) ([]SearchResult, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 
 	if err != nil {

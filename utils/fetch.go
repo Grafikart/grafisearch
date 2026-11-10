@@ -41,6 +41,7 @@ func Fetch(ctx context.Context, url string) (*http.Response, error) {
 		return nil, err
 	}
 	if res.StatusCode != 200 {
+		res.Body.Close()
 		return nil, fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
 	}
 	return res, nil

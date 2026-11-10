@@ -35,6 +35,7 @@ func extractUrlFromYrNoDk(ctx context.Context, s string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	defer r.Body.Close()
 
 	decoder := json.NewDecoder(r.Body)
 	var data yrNoDkSuggest
