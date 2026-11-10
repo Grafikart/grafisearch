@@ -69,7 +69,7 @@ func GetBraveResults(q string) ([]SearchResult, error) {
 			})
 		}
 		max := int(math.Min(float64(len(videos)-1), 4))
-		results = utils.InsertSlice(results, videos[:max+1], 2)
+		results = utils.InsertSlice(results, videos[:max+1], min(2, len(results)))
 	}
 	return results, err
 }
