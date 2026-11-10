@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/beevik/etree"
@@ -30,10 +31,13 @@ func FetchBingWallpaper() (string, error) {
 	request.Header.Add("Accept", `application/xml`)
 
 	resp, err := client.Do(request)
-	if err != nil || resp.StatusCode != http.StatusOK {
+	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("wallpaper request failed: %s", resp.Status)
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil || len(body) == 0 {
@@ -45,8 +49,10 @@ func FetchBingWallpaper() (string, error) {
 		return "", err
 	}
 
-	// get image element
-	imgElem := doc.SelectElement("images").SelectElement("image")
+	urlBase := doc.FindElement("images/image/urlBase")
+	if urlBase == nil || strings.TrimSpace(urlBase.Text()) == "" {
+		return "", fmt.Errorf("wallpaper response is missing images/image/urlBase")
+	}
 
-	return fmt.Sprintf("%s%s_%s%s", bingURL, imgElem.SelectElement("urlBase").Text(), bingResolution, ".jpg"), nil
+	return fmt.Sprintf("%s%s_%s%s", bingURL, strings.TrimSpace(urlBase.Text()), bingResolution, ".jpg"), nil
 }
