@@ -45,7 +45,6 @@ func main() {
 	publicServer := http.FileServer(http.FS(publicFS))
 
 	// Static Assets
-	http.HandleFunc("/sse", server.SSEHandler)
 	http.HandleFunc("/assets/", viteAssets.ServeAssets)
 
 	// API

@@ -22,11 +22,11 @@ func TestSearchEngines(t *testing.T) {
 			q := "Grafikart"
 			res, err := tt.searchFunc(t.Context(), q)
 			if err != nil {
-				t.Errorf(`%s("%s") %v`, tt.funcName, q, err)
+				t.Fatalf(`%s("%s") %v`, tt.funcName, q, err)
 			}
 
 			if len(res) <= 1 {
-				t.Errorf(`%s("%s") expected more than 1 results`, tt.funcName, q)
+				t.Fatalf(`%s("%s") expected more than 1 results`, tt.funcName, q)
 			}
 
 			if res[0].URL != "https://grafikart.fr/" {
